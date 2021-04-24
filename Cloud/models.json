@@ -1,0 +1,14 @@
+{
+    "_id":"",
+    "name":"",
+    "api_key":"",
+    "plants":[
+        {
+            "name": "Minzi",
+            "sensor_pin": "",
+            "pump_pin": "",
+            "trigger_percentage":"",
+            "Log":""
+        }
+    ]
+}
