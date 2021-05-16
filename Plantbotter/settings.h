@@ -6,46 +6,23 @@
     ##### Plantboter Cloud Settings ####
 !Only Works with Wifi enabled Microcontrollers like ESP8266!
 
-To enable Plantbotter Cloud set plantBotterCloud to true.
 You have to enter a valid server Address and API Key.
 
 For a valid wifi connection enter your wifi ssid and wifi password 
 */
-#define plantBotterCloud false
 
 //cloud server
-#define server "http://plantbottercloud/api"
-#define apiKey "ahfsvblikdfzuuvbpksösdvbsofnhisvbiksdvbiseufbiedfbasivbsiefvcb"
+#define SERVER "http://192.168.178.44:3001/"
+#define API_KEY "pBUT8baBgi91KBK4ZEFNYOMJlwmcrYZD6RqAszN82l7CxrdqLg3rGS03M4s7hk0Fg4DdXgeHJ5mFlvriangZFafQvXUq3hfMfFo3ZCe5iPcEXgSIS0bCd96DyBFw"
 
 //wifi
-#define ssid "ssid"
-#define password "password"
+#define WIFI_SSID "Samhain"
+#define WIFI_PASSWORD "Funkenflug_1842"
 
 
-/*
-    ##### Display Settings #####
-This option allows for a 0.91 inch display.
-The display shows current status and the plants.  
-*/
-#define useDisplay true
-
-
-/*
-    ##### Plant Settings #####
-To Add a Plant change the number of plants. Then add a Plant by adding a array like that:
-{"Plant Name", "Sensor Pin", "Pump Pin", "trigger percentage"}
-
-trigger Percentage (min 0, max 100):
-//0 => Completly Wet 
-//100 => Completly Dry
-if status is above the trigger percentage it will pump whater
-*/
-
-/* number of plants
-          ---v---         */
-char* plants[1][4] {
-    {"Minzi", "34", "15", "40"}
-};
-
+// Soon Depretiated
 //The time in ms witch the pump is activated
-#define pumpTime 1000
+#define PUMP_TIME 1000
+
+//Cycle delay defines the time to wait after each cycle
+#define CYCLE_DELAY 300000

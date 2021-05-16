@@ -39,12 +39,16 @@ router.put('/updateController/:controller_id', async function(req, res){
     res.send(await apiutil.updateController(req.params.controller_id, req))
 })
 
-router.put('/updatePlant/:controller_id/:log_id', async function(req, res){
-    res.send(await apiutil.updatePlant(req.params.controller_id, req.params.log_id, req))
+router.put('/updatePlant/:log_id', async function(req, res){
+    res.send(await apiutil.updatePlant(req.params.log_id, req))
 })
 
 router.get('/getlog/:log_id', async function(req, res){
     res.send(await apilog.getLog(req.params.log_id))
+})
+
+router.post('/reloadapikey/:controller_id',async function(req, res){
+    res.send(await apiutil.reloadAPIKey(req.params.controller_id))
 })
 
 module.exports = router;

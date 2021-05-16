@@ -20,6 +20,19 @@ async function addController(){
     return {id: data.insertedId};
 }
 
+async function reloadAPIKey(controller_id){
+    const database = await getDatabase();
+
+    //get if controller exists
+    var controller = await getSetting(controller_id);
+    
+    if(!controller){
+        return false;
+    }
+
+    await database.collection(controllerCollectionName).findOneAndUpdate({"_id": ObjectId(controller._id)},{$set: {"api_key":genApiKey()}},{upsert:true});
+}
+
 async function addPlantToController(controller_id){
     const database = await getDatabase();
 
@@ -73,17 +86,26 @@ async function removePlant(log_id){
         var plantList = [];
 
         controller.plants.forEach(data => {
-            if(data.log == log_id){
+            
+            if(data.log._id == log_id){
                 reloadPlantList = true;
             }
         })
         
-        if(reloadPlantList){
+        if(reloadPlantList == true){
             controller.plants.forEach(data => {
-                if(data.log != log_id){
-                    plantList.push(data)
+                if(data.log._id != log_id){
+                    plantList.push({
+                        name: data.name,
+                        img: data.img,
+                        sensor_pin: data.sensor_pin,
+                        pump_pin: data.pump_pin,
+                        trigger_percentage: data.trigger_percentage,
+                        log: data.log._id
+                    });
                 }
             })
+
             await database.collection(logCollectionName).remove({_id: ObjectId(log_id)});
             await database.collection(controllerCollectionName).findOneAndUpdate({"_id": ObjectId(controller._id)},{$set: {"plants":plantList}},{upsert:true});
         }
@@ -100,6 +122,8 @@ async function updateController(controller_id, req){
         return false;
     }
 
+    console.log(req.body)
+
     var newController = {
         api_key: controller.api_key,
         name: req.body.name,
@@ -112,35 +136,52 @@ async function updateController(controller_id, req){
     return true;
 }
 
-async function updatePlant(controller_id, log_id, req){
+async function updatePlant(log_id, req){
     const database = await getDatabase();
 
     //get if controller exists
-    var controller = await getSetting(controller_id);
+    var controller = await getSettings();
     
     if(!controller){
         return false;
     }
 
+    var con = {};
+
+    controller.forEach(data => {
+        data.plants.forEach(plant => {
+            if(plant.log._id == log_id){
+                con = data; 
+            }
+        })
+    });
+
     var newPlantlist = []
 
-    controller.plants.forEach(async plant => {
-        if(plant.log == log_id){
+    con.plants.forEach(async plant => {
+        if(plant.log._id == log_id){
             var newPlant = {
                 name: req.body.name,
                 img: req.body.img,
                 sensor_pin: req.body.sensor_pin,
                 pump_pin: req.body.pump_pin,
                 trigger_percentage: req.body.trigger_percentage,
-                log: plant.log
+                log: plant.log._id
             };
             newPlantlist.push(newPlant);
         }
         else{
-            newPlantlist.push(plant);
+            newPlantlist.push({
+                name: plant.name,
+                img: plant.img,
+                sensor_pin: plant.sensor_pin,
+                pump_pin: plant.sensor_pin,
+                trigger_percentage: plant.trigger_percentage,
+                log: plant.log._id
+            });
         }
     })
-    await database.collection(controllerCollectionName).findOneAndUpdate({"_id": ObjectId(controller._id)},{$set: {"plants": newPlantlist}},{upsert:true});
+    await database.collection(controllerCollectionName).findOneAndUpdate({"_id": ObjectId(con._id)},{$set: {"plants": newPlantlist}},{upsert:true});
 }
 
 
@@ -150,5 +191,6 @@ module.exports = {
     removeController,
     removePlant,
     updateController,
-    updatePlant
+    updatePlant,
+    reloadAPIKey
 }

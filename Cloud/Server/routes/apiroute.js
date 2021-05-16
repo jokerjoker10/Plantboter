@@ -25,7 +25,7 @@ router.put('/executedecommand/:api_key', async function (req, res) {
     res.send();
 });
 
-router.post('/logplant/:api_key/:plant_index', async function (req, res) {
+router.post('/logplant/:api_key/:log_id', async function (req, res) {
     var id = await authService.auth(req.params.api_key)
     if(!id){
         res.statusCode = 401;

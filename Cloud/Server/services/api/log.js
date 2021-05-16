@@ -7,7 +7,7 @@ const apicollectionName = 'Log';
 
 async function logPlant(id, req){
     var body = req.body;
-    var log_index = req.params.plant_index;
+    var log_id = req.params.log_id;
     var data = await settingService.getSetting(id);
 
     const database = await getDatabase();
@@ -24,13 +24,13 @@ async function logPlant(id, req){
     };
 
     //update db
-    await database.collection(apicollectionName).findOneAndUpdate({"_id": data.plants[log_index].log},{$push: {"logs":newBody}},{upsert:true});
+    await database.collection(apicollectionName).findOneAndUpdate({"_id": ObjectId(log_id)},{$push: {"logs":newBody}},{upsert:true});
     return true;
 } 
 
 async function getLog(id){
     const database = await getDatabase();
-    return  await database.collection(apicollectionName).findOne({"_id": ObjectId(id)});
+    return await database.collection(apicollectionName).findOne({"_id": ObjectId(id)});
 }
 
 module.exports = {
