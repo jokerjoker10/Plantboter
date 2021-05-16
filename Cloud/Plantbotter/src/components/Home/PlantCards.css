@@ -1,0 +1,40 @@
+.HomeGrid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-auto-rows: min-content;
+
+    --delay: 500ms;
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform :scale(0.1);
+        padding-left: -10px;
+    }
+    to {
+        opacity: 1;
+        transform :scale(1);
+        padding-left: 0px;
+    }
+}
+
+.plantCard {
+    animation: cardEntrance 700ms ease-out;
+    animation-fill-mode: backwards;
+    animation-delay: 100ms;
+}
+
+.image {
+    max-height: 175px;
+    
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.imageContainer {    
+    width: 100%;
+    overflow: hidden;
+}

@@ -1,0 +1,91 @@
+.SettingGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+
+  --delay: 500ms;
+}
+
+@keyframes cardEntrance {
+  from {
+      opacity: 0;
+      transform :scale(0.1);
+      padding-left: -10px;
+  }
+  to {
+      opacity: 1;
+      transform :scale(1);
+      padding-left: 0px;
+  }
+}
+
+@keyframes addCardEntrance {
+  from {
+      opacity: 0;
+      transform :scale(0.1);
+      padding-left: -10px;
+  }
+  to {
+      opacity: 0.5;
+      transform :scale(1);
+      padding-left: 0px;
+  }
+}
+
+.controllerCard {
+  /*animation: cardEntrance 700ms ease-out;*/
+  animation-fill-mode: backwards;
+  animation-delay: 100ms;
+}
+
+.settingsImage {
+  max-height: 75px;
+  vertical-align: middle;
+  display: inline-block; 
+}
+
+.settingsImageContainer {    
+  width: 100%;
+  overflow: hidden;
+}
+
+.addControllerCard{
+  /*animation: addCardEntrance 700ms ease-out;*/
+  animation-fill-mode: backwards;
+  animation-delay: 100ms;
+
+  display: block;
+  opacity: 0.5;
+}
+
+.addControllerCardBody{
+  display: block;
+  text-align: center;
+}
+
+.addButton{
+  font-size: 75px;
+}
+
+.plantGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.settingListElement{
+  text-align: center;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.imageUpload {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.dangerzone {
+  border: 1px solid red;
+  border-radius: 5px;
+  background-color: #ffe9e9;
+}
