@@ -30,7 +30,7 @@ async function logPlant(id, req){
 
 async function getLog(id){
     const database = await getDatabase();
-    return await database.collection(apicollectionName).findOne({"_id": ObjectId(id)});
+    return await database.collection(apicollectionName).findOne({"_id": ObjectId(id)}, { projection: {"logs": {$slice: -100}}});
 }
 
 module.exports = {

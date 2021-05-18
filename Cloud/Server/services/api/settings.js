@@ -2,6 +2,8 @@ const { contentSecurityPolicy } = require('helmet');
 const {getDatabase} = require('../../database/mongo');
 var ObjectId = require('mongodb').ObjectID;
 
+const log = require('./log');
+
 const apicollectionName = 'Controller';
 const apilogcollectionName = 'Log';
 
@@ -11,14 +13,13 @@ async function getSetting(id){
 
     var plant_list = [];
     await con.plants.forEach(async (element) => {
-        var _log = await database.collection(apilogcollectionName).findOne({"_id": ObjectId(element.log)});
         plant_list.push({
             name: element.name,
             img: element.img,
             sensor_pin: element.sensor_pin,
             pump_pin: element.pump_pin,
             trigger_percentage: element.trigger_percentage,
-            log: _log
+            log: await log.getLog(element.log)
         })
     });
 
@@ -39,7 +40,7 @@ async function getSettings(){
                 sensor_pin: element.sensor_pin,
                 pump_pin: element.pump_pin,
                 trigger_percentage: element.trigger_percentage,
-                log: await database.collection(apilogcollectionName).findOne({"_id": ObjectId(element.log)})
+                log: await log.getLog(element.log)
             })
         };
 
