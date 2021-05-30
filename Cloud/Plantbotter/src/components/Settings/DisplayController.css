@@ -30,6 +30,14 @@
       padding-left: 0px;
   }
 }
+ion-alert div {
+  background-color: white;
+}
+
+.plantSettingCard{
+  display: block;
+  width: 100%;
+}
 
 .controllerCard {
   /*animation: cardEntrance 700ms ease-out;*/
@@ -88,4 +96,11 @@
   border: 1px solid red;
   border-radius: 5px;
   background-color: #ffe9e9;
+}
+
+.popoverdanger {
+  border: 1px solid red;
+  border-radius: 4px;
+  padding: 5px;
+  background-color: #fde2e0;
 }

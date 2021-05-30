@@ -8,19 +8,23 @@ export interface controller {
     api_key: string;
     name: string;
     plants: Array<plant>;
+    cycle_time: number;
     command: string
 }
 
 export interface controllerUpdate {
     name: string;
+    cycle_time: number;
 }
 
 export interface plant {
     name: string;
     img: string;
     sensor_pin: number;
+    sensor_type: string;
     pump_pin: number;
     trigger_percentage: number;
+    pump_time: number;
     log: log;
 }
 
@@ -28,8 +32,10 @@ export interface plantUpdate {
     name: string;
     img: string;
     sensor_pin: number;
+    sensor_type: string;
     pump_pin: number;
     trigger_percentage: number;
+    pump_time: number;
 }
 
 export interface log {
@@ -49,6 +55,7 @@ async function getAllController(){
         _id: "string",
         api_key: "string",
         name: "string",
+        cycle_time: 0,
         plants: [],
         command: "string"
     };
@@ -61,6 +68,7 @@ async function getAllController(){
                 _id: element._id,
                 api_key: element.api_key,
                 name: element.name,
+                cycle_time: element.cycle_time,
                 plants: element.plants,
                 command: element.command
             };
@@ -106,7 +114,6 @@ async function reloadApiKey(con_id: string) {
 }
 
 async function updateController(con_id: string, updateData: controllerUpdate) {
-    console.log(JSON.stringify(updateData))
     return fetch(_default.DEFAULT_API_URL + _default.ENDPOINT_UPDATE_CONTROLLER + "/" + con_id, 
     {
         method: "PUT",
@@ -118,7 +125,6 @@ async function updateController(con_id: string, updateData: controllerUpdate) {
 }
 
 async function updatePlant(log_id: string, updateData: plantUpdate) {
-    console.log(JSON.stringify(updateData))
     return fetch(_default.DEFAULT_API_URL + _default.ENDPOINT_UPDATE_PLANT + "/" + log_id, 
     {
         method: "PUT",

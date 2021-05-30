@@ -2,6 +2,7 @@
 http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
+
 :root {
 
   --ion-background-color: linear-gradient(to right, #085078, #85d8ce);

@@ -14,6 +14,7 @@ async function addController(){
         api_key: genApiKey(),
         name: "New Controller",
         plants: [],
+        cycle_time: 300,
         command: null 
     };
     var data = await database.collection(controllerCollectionName).insertOne(newController)
@@ -58,6 +59,8 @@ async function addPlantToController(controller_id){
         sensor_pin: 0,
         pump_pin: 0,
         trigger_percentage: 40,
+        sensor_type: "analog",
+        pump_time: 2000,
         log: data.insertedId
     }
     await database.collection(controllerCollectionName).findOneAndUpdate({"_id": ObjectId(controller_id)},{$push: {"plants":newPlant}},{upsert:true});
@@ -99,8 +102,10 @@ async function removePlant(log_id){
                         name: data.name,
                         img: data.img,
                         sensor_pin: data.sensor_pin,
+                        sensor_type: data.sensor_type,
                         pump_pin: data.pump_pin,
                         trigger_percentage: data.trigger_percentage,
+                        pump_time: data.pump_time,
                         log: data.log._id
                     });
                 }
@@ -127,6 +132,7 @@ async function updateController(controller_id, req){
     var newController = {
         api_key: controller.api_key,
         name: req.body.name,
+        cycle_time: req.body.cycle_time,
         plants: controller.plants,
         command: controller.command
     }
@@ -160,28 +166,42 @@ async function updatePlant(log_id, req){
 
     con.plants.forEach(async plant => {
         if(plant.log._id == log_id){
-            var newPlant = {
+            newPlantlist.push({
                 name: req.body.name,
                 img: req.body.img,
                 sensor_pin: req.body.sensor_pin,
+                sensor_type: req.body.sensor_type,
                 pump_pin: req.body.pump_pin,
                 trigger_percentage: req.body.trigger_percentage,
+                pump_time: req.body.pump_time,
                 log: plant.log._id
-            };
-            newPlantlist.push(newPlant);
+            });
         }
         else{
             newPlantlist.push({
                 name: plant.name,
                 img: plant.img,
                 sensor_pin: plant.sensor_pin,
+                sensor_type: plant.sensor_type,
                 pump_pin: plant.sensor_pin,
                 trigger_percentage: plant.trigger_percentage,
+                pump_time: plant.pump_time,
                 log: plant.log._id
             });
         }
     })
-    await database.collection(controllerCollectionName).findOneAndUpdate({"_id": ObjectId(con._id)},{$set: {"plants": newPlantlist}},{upsert:true});
+    await database.collection(controllerCollectionName).findOneAndUpdate(
+        {
+            "_id": ObjectId(con._id)
+        },
+        {
+            $set: {
+                "plants": newPlantlist
+            }
+        },
+        {
+            upsert:true
+        });
 }
 
 

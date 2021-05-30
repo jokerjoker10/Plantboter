@@ -32,39 +32,58 @@ void loop(){
   }
 
   JSONVar plants = cloud.settings["plants"];
-  
-  Serial.println("\nData from controller: " + JSON.stringify(plants) + "\n");
-  
+  int cycle_time = (int)cloud.settings["cycle_time"];
+    
   for(int i = 0; plants.length() > i;i++){
     //plant object
     JSONVar plant = plants[i];
 
     //all vars form plant
-    JSONVar name = plant["name"];
+    String name = (String)JSON.stringify(plant["name"]);
     int sensor_pin = (int)plant["sensor_pin"];
+    String sensor_type = (String)JSON.stringify(plant["sensor_type"]);
     int pump_pin = (int)plant["pump_pin"];
+    int pump_time = (int)plant["pump_time"];
     int trigger_percentage = (int)plant["trigger_percentage"];
-    JSONVar log_id = plant["log"];
-        
+    String log_id = (String)JSON.stringify(plant["log"]);
+
     Serial.print("Plant :");
     Serial.println(name);
 
     Serial.println("Getting Sensor Value...");
 
-    int sensorValue = analogRead(sensor_pin);
+    bool waterPlant = false;
+    int sensorValue = 0;
     
-    Serial.print("Sensor Value: ");
-    Serial.println(sensorValue);
+    if(sensor_type == "\"analog\""){
+      sensorValue = analogRead(sensor_pin);
+      double percent = (sensorValue/10.23);
     
-    double percent = (sensorValue/10.23);
-    Serial.println("Percentage: " + (String)percent + "%");
+      Serial.println("Percentage: " + (String)percent + "%");
 
-    //log value
-    Serial.println("logging data...");
-    cloud.logData((String)JSON.stringify(log_id), "value_log", percent);
+      if((float)trigger_percentage < percent){
+        waterPlant = true; 
+      }
+
+      cloud.logData((String)JSON.stringify(log_id), "value_log", percent);
+    }
+    else if(sensor_type == "\"digital\""){
+      pinMode(sensor_pin, INPUT);
+      sensorValue = digitalRead(sensor_pin);
+      
+      if(sensorValue == HIGH){
+        waterPlant = true; 
+      }
+      
+      cloud.logData((String)JSON.stringify(log_id), "value_log", sensorValue);
+    }
+    else{
+      Serial.println("Error");
+    }
+
     
     //test if need to water
-    if((float)trigger_percentage < percent){
+    if(waterPlant){
       Serial.println("Watering plant");
       cloud.logData((String)JSON.stringify(log_id), "water_log", 100);
       
@@ -72,12 +91,12 @@ void loop(){
       pinMode(pump_pin, OUTPUT);
       
       digitalWrite(pump_pin, LOW);
-      delay(PUMP_TIME);
+      delay(pump_time);
       digitalWrite(pump_pin, HIGH);
     }
     
     Serial.println("");
   }
-  delay(CYCLE_DELAY);
+  delay(cycle_time);
   Serial.println("\n");
 }

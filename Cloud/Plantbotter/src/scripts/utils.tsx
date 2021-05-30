@@ -38,8 +38,10 @@ function getPlantDataFromIndex(plant_index: string, con: Array<controller>): pla
         name: "",
         img: "",
         sensor_pin: 0,
+        sensor_type: "analog",
         pump_pin: 0,
         trigger_percentage: 0,
+        pump_time: 0,
         log: {
             _id: "",
             logs: []

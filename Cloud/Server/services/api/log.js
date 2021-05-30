@@ -8,7 +8,6 @@ const apicollectionName = 'Log';
 async function logPlant(id, req){
     var body = req.body;
     var log_id = req.params.log_id;
-    var data = await settingService.getSetting(id);
 
     const database = await getDatabase();
 
@@ -33,7 +32,14 @@ async function getLog(id){
     return await database.collection(apicollectionName).findOne({"_id": ObjectId(id)}, { projection: {"logs": {$slice: -100}}});
 }
 
+async function getDetailedLog(log_id, start, end){
+    const database = await getDatabase();
+    return await database.collection(apicollectionName).findOne({"_id": ObjectId(id)}, { projection: {"logs": {$slice: [start, end]}}});
+}
+
 module.exports = {
     logPlant,
-    getLog
+    getLog,
+    getDetailedLog,
+
 };

@@ -44,20 +44,31 @@
                 "copyHoverText": "Kopieren",
                 "copySuccessText": "Kopiert!",
                 "saveText":"Speichern",
-                "danger":{                    
-                    "title": "Gefahren Zone",
+                "cycleTime":{
+                    "title": "Zyklus Zeit (sec)",
+                    "picker": {
+                        "confirm": "bestätigen",
+                        "times": {
+                            "seconds": "Sekunden",
+                            "minutes": "Minuten",
+                            "hours": "Stunden"
+                        }}
+                },
+                "popover":{
+                    "addPlant":"Pflanze Hinzufügen",
                     "reloadApiKey": "API Key Erneuern",
                     "deleteController": "Controller Löschen"
                 },
                 "plants": {
                     "plantName":"Name",
-                    "addPlantTitle":"Pflanze Hinzufügen",
+                    "removePlant": "Pflanze entfernen",
                     "newPicture":"Bild Hochladen",
                     "changePicture":"Bild Wechseln",
                     "sensorPin":"Sensor Pin",
                     "pumpPin":"Pumpen Pin",
                     "triggerPercentage":"Prozentsatz ab dem gegossen wird",
-                    "saveSetting":"Speichern "
+                    "pumpTime": "Pump Zeit",
+                    "saveSetting":"Speichern"
                 }
             }
         },

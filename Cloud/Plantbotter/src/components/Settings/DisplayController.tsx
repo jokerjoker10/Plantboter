@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { IonCard, IonCardTitle,IonText, IonRange, IonLabel, IonItem, IonCardHeader, IonCol, IonRow, IonCardContent,IonGrid,IonIcon, IonButton, IonInput, IonContent, IonBadge, useIonLoading } from '@ionic/react';
+import { IonCard, IonCardTitle,IonText, IonList, IonLabel, IonItem, IonCardHeader, IonCol, IonRow, IonCardContent,IonGrid,IonIcon, IonButton, IonInput, useIonPicker, IonBadge, useIonLoading, IonListHeader, useIonPopover, IonSelect, IonSelectOption, IonTextarea } from '@ionic/react';
 import {getAllController, controllerUpdate, getLang, controller, addPlant, updateController} from '../../scripts/superStore';
-import {addOutline, reloadOutline, hardwareChipOutline, trashBinOutline, leafOutline, imageOutline, closeCircleOutline, saveOutline} from 'ionicons/icons';
+import {trashBinOutline, saveOutline, optionsOutline, addOutline, copyOutline} from 'ionicons/icons';
 import './DisplayController.css'
-
 import DisplayPlantSettings from './PlantSettings';
 import { isWhiteSpaceLike } from 'typescript';
 
@@ -14,10 +13,56 @@ interface ContainerProps {
     controller: controller;
 }
 
+function handleAddPlant(id: string){
+    addPlant(id).finally(() => {
+        window.location.href = "/settings"
+    });
+}
+
+const SettingsPopover: React.FC<{onHide: () => void;controller: controller;}> = ({onHide, controller}) => (    
+    <IonList>
+
+        <IonItem button detail={false} onClick={() => handleAddPlant(controller._id)}>
+            <IonIcon icon={addOutline}></IonIcon>
+            {lang.settings.controller.popover.addPlant}
+        </IonItem>
+        
+        <IonItem button detail={false} href= {"/danger/reload_api/"+controller._id}>
+            <div className="popoverdanger">
+                <IonIcon icon={trashBinOutline}></IonIcon>
+                {lang.settings.controller.popover.reloadApiKey}
+            </div>
+        </IonItem>
+        
+        <IonItem button lines="none" detail={false} href= {"/danger/delete_controller/"+controller._id}>
+            <div className="popoverdanger">
+                <IonIcon icon={trashBinOutline}></IonIcon>
+                {lang.settings.controller.popover.deleteController}
+            </div>
+        </IonItem>
+
+    </IonList>
+)
+
 
 const DisplayController: React.FC<ContainerProps> = ({controller}) => {
+    //element states
     const [loadingCircle] = useIonLoading();
+    const [settingsShow, settingsUnshow] = useIonPopover(SettingsPopover, {onHide: () => settingsUnshow(), controller: controller});
+
+    //settings editable by humans
     const [conName, setConName] = useState<string>(controller.name);
+    const [cycleTime, setCycleTime] = useState<number>(controller.cycle_time/1000);
+    
+    console.log(controller);
+
+    function getCycleTimePickerValues():{ text: number; value: number; }[]{
+        var out = []
+        for(var i = 1; i <= 100; i++){
+            out.push({ text: i, value: i })
+        }
+        return out
+    }
 
     function copyApiKey(){
         navigator.permissions.query({name: "clipboard-write"}).then(result => {
@@ -29,90 +74,72 @@ const DisplayController: React.FC<ContainerProps> = ({controller}) => {
         });
     }
 
-    function handleAddPlant(id: string){
-        loadingCircle();
-        addPlant(id).finally(() => {
-            window.location.href = "/settings"
-        });        
-    }
-
     function handleSaveController(){
-        loadingCircle();
+        console.log(cycleTime)
+        if(conName != "" && cycleTime != undefined){
+            loadingCircle();
 
-        updateController(controller._id, {name: conName}).finally(() => {
-            window.location.href = "/settings"
-        })
+            updateController(controller._id, {name: conName, cycle_time: cycleTime * 1000}).finally(() => {
+                //window.location.href = "/settings"
+            })
+        }
     }
 
     return (
         <IonCard className="controllerCard">
             <IonCardHeader>
-                <IonCardTitle>{conName}</IonCardTitle>
-                <div style={{fontSize:100,color:"black",marginTop:20,textAlign:"center"}}>
-                    <IonIcon icon={hardwareChipOutline}></IonIcon>
-                </div>
+                
+                <IonCardTitle style={{}}>
+                    {conName != "" ? conName : "<NONE>"}
+                    <IonIcon icon={optionsOutline} size="large" style={{float:"right",color:"white"}} onClick={(e) => settingsShow({event: e.nativeEvent})}></IonIcon>
+                </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
-                <IonItem>
-                    <IonGrid>
-
-                        <IonRow>
-                            <IonCol>{lang.settings.controller.nameTitle}</IonCol>
-                            <IonCol>
-                                <IonInput value={conName} onIonChange={e => setConName(e.detail.value!)}></IonInput>
-                            </IonCol>
-                        </IonRow>
-
-                        <IonRow>
-                            <IonCol>
-                                {lang.settings.controller.apiTitle}
-                                <IonBadge color="success" id={"apibadge" + controller._id} style={{display:"none"}}>{lang.settings.controller.copySuccessText}</IonBadge>
-                            </IonCol>
-                            <IonCol style={{lineBreak:"auto",width:"150px"}}>
-                                <IonText onClick={copyApiKey} id="apikey">
-                                    <span title={lang.settings.controller.copyHoverText}>
-                                        {controller.api_key}
-                                    </span>
-                                </IonText>
-                            </IonCol>
-                        </IonRow>
-
-                        <IonButton color="success" onClick={handleSaveController}>
-                            {lang.settings.controller.saveText}<IonIcon icon={saveOutline}></IonIcon>
-                        </IonButton>
-
-                        <IonRow className="dangerzone">
-                            <IonCol>{lang.settings.controller.danger.title}</IonCol>
-                            <IonCol>
-                                <IonButton color="danger" href={"/danger/delete_controller/" + controller._id}>
-                                    <IonIcon icon={trashBinOutline}></IonIcon>
-                                    {lang.settings.controller.danger.deleteController}
-                                </IonButton>
-                                <IonButton color="danger" href={"/danger/reload_api/" + controller._id}>
-                                    <IonIcon icon={reloadOutline}></IonIcon>
-                                    {lang.settings.controller.danger.reloadApiKey}
-                                </IonButton>
-                            </IonCol>
-                        </IonRow>
+                <IonList>
+                    <form> 
+                        {/*
+                            Name
+                        */}
+                        <IonItem lines="inset">
+                            <IonLabel position="floating">{lang.settings.controller.nameTitle}</IonLabel>
+                            <IonInput value={conName} onIonChange={e => setConName(e.detail.value!)} required></IonInput>
+                        </IonItem>
                         
-                    </IonGrid>
-                </IonItem>
+                        {/*
+                            API-Key
+                        */}
+                        <IonItem lines="inset">
+                            <IonLabel position="floating">{lang.settings.controller.apiTitle}</IonLabel>
+                            <IonTextarea value={controller.api_key} readonly></IonTextarea>
+                            
+                            <IonBadge color="success" id={"apibadge" + controller._id} style={{display:"none"}}>{lang.settings.controller.copySuccessText}</IonBadge>
+                            
+                            <IonButton onClick={copyApiKey}>
+                                <IonIcon icon={copyOutline}></IonIcon>
+                            </IonButton>
+                        </IonItem>
+                        
+                        {/*
+                            Cycle Time
+                        */}
+                        <IonItem lines="inset">
+                            <IonLabel position="floating">{lang.settings.controller.cycleTime.title}</IonLabel>
+                            <IonInput onIonChange={e => setCycleTime(Number(e.detail.value))} value={cycleTime} type="number" step="1" min="0" required></IonInput>
+                        </IonItem>
+
+                        <IonButton color="success" onClick={handleSaveController} type="submit">
+                            <IonIcon icon={saveOutline}></IonIcon>{lang.settings.controller.saveText}
+                        </IonButton>
+                    </form>
+                </IonList>
                 <div className="plantGrid">
                     {controller.plants.map((data: any) => {
                         {return(<>
-                            <DisplayPlantSettings plantData={data}></DisplayPlantSettings>
+                            <IonItem lines="none" key={data.log._id} >
+                                <DisplayPlantSettings plantData={data}></DisplayPlantSettings>
+                            </IonItem>
                         </>)}
                     })}
-                    <IonCard className="addControllerCard">
-                        <IonCardHeader>
-                            <IonCardTitle><IonIcon icon={leafOutline}></IonIcon> {lang.settings.controller.plants.addPlantTitle}</IonCardTitle>
-                        </IonCardHeader>
-                        <IonCardContent className="addControllerCardBody" >
-                            <IonButton color="success" onClick={(e) => handleAddPlant(controller._id)}>
-                                <IonIcon className="addButton" icon={addOutline}></IonIcon>
-                            </IonButton>
-                        </IonCardContent>
-                    </IonCard>
                 </div>
             </IonCardContent>
         </IonCard>

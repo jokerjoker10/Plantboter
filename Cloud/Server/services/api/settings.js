@@ -17,8 +17,10 @@ async function getSetting(id){
             name: element.name,
             img: element.img,
             sensor_pin: element.sensor_pin,
+            sensor_type: element.sensor_type,
             pump_pin: element.pump_pin,
             trigger_percentage: element.trigger_percentage,
+            pump_time: element.pump_time,
             log: await log.getLog(element.log)
         })
     });
@@ -38,8 +40,10 @@ async function getSettings(){
                 name: element.name,
                 img: element.img,
                 sensor_pin: element.sensor_pin,
+                sensor_type: element.sensor_type,
                 pump_pin: element.pump_pin,
                 trigger_percentage: element.trigger_percentage,
+                pump_time: element.pump_time,
                 log: await log.getLog(element.log)
             })
         };
@@ -49,6 +53,7 @@ async function getSettings(){
             api_key: con.api_key,
             name: con.name,
             plants: plant_list,
+            cycle_time: con.cycle_time,
             command: con.command
         })
     }

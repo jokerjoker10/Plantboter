@@ -16,36 +16,41 @@ router.get('/getcontroller/:id', async function (req, res) {
 });
 
 //controller and plants
-router.post('/createNewController', async function (req, res) {
+router.post('/createcontroller', async function (req, res) {
     res.send(await apiutil.addController());
 });
 
-router.post('/addPlantToController/:controller_id', async function (req, res) {
+router.post('/addplant/:controller_id', async function (req, res) {
     if(!await apiutil.addPlantToController(req.params.controller_id)){
         res.statusCode = 400;
     }
     res.send();
 });
 
-router.post('/removeController/:controller_id', async function (req, res) {
+router.post('/removecontroller/:controller_id', async function (req, res) {
     res.send(await apiutil.removeController(req.params.controller_id));
 });
 
-router.post('/removePlantFromController/:log_id', async function (req, res) {
+router.post('/removeplant/:log_id', async function (req, res) {
     res.send(await apiutil.removePlant(req.params.log_id));
 });
 
-router.put('/updateController/:controller_id', async function(req, res){
+router.put('/updatecontroller/:controller_id', async function(req, res){
     res.send(await apiutil.updateController(req.params.controller_id, req))
 })
 
-router.put('/updatePlant/:log_id', async function(req, res){
+router.put('/updateplant/:log_id', async function(req, res){
     res.send(await apiutil.updatePlant(req.params.log_id, req))
 })
 
 router.get('/getlog/:log_id', async function(req, res){
     res.send(await apilog.getLog(req.params.log_id))
 })
+
+router.get('/detailedlog/:start/:end/:log_id', async function(req, res){
+    res.send(await apilog.getDetailedLog(req.params.log_id, req.params.start, req.params.end))
+})
+
 
 router.post('/reloadapikey/:controller_id',async function(req, res){
     res.send(await apiutil.reloadAPIKey(req.params.controller_id))
