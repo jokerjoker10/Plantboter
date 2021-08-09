@@ -37,9 +37,36 @@ async function getDetailedLog(log_id, start, end){
     return await database.collection(apicollectionName).findOne({"_id": ObjectId(id)}, { projection: {"logs": {$slice: [start, end]}}});
 }
 
+async function getLogMeta(log_id){
+    const database = await getDatabase();
+    
+    var _type_counts = await database.collection(apicollectionName).findOne(
+        {
+            "_id": ObjectId(id)
+        }, 
+        { 
+            projection: { 
+                $size: "logs"
+            }
+        }
+    );
+
+    return {
+        total_count: _type_counts,
+        type_counts: [
+            {
+                type: "value_log",
+                count: 0
+            }
+        ],
+        last_contact: "",
+        last_water_value: 100
+    }
+}
+
 module.exports = {
     logPlant,
     getLog,
     getDetailedLog,
-
+    getLogMeta
 };

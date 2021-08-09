@@ -79,6 +79,7 @@ bool PlantbotterNet::getSettings(){
 //returns bool of success
 bool PlantbotterNet::logData(String log_id, String type, double value){
   log_id.replace("\"", "");
+  log_id.replace("\\", "");
   if(WiFi.status()== WL_CONNECTED){
     String data = this->postRequest(SERVER + ENDPOINT_LOG_PLANT + API_KEY + "/" + log_id, type, value);
   }

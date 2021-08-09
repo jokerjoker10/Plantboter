@@ -37,7 +37,7 @@ function imageButtons(img: any){
 const SettingsPopover: React.FC<{onHide: () => void;plant: plant;}> = ({onHide, plant}) => (
     <IonList>
         
-        <IonItem lines="none" button detail={false} href= {"/danger/delete_plant/" + plant.log._id}>
+        <IonItem lines="none" button detail={false} href= {"/danger/delete_plant/" + plant.log}>
             <div className="popoverdanger">
                 <IonIcon icon={trashBinOutline}></IonIcon>
                 {lang.settings.controller.plants.removePlant}
@@ -72,7 +72,7 @@ const DisplayPlantSettings: React.FC<ContainerProps> = ({plantData}) => {
                 pump_time: pumpTime
             }
 
-            updatePlant(plantData.log._id, updatedData)
+            updatePlant(plantData.log, updatedData)
             .finally(() => {
                 window.location.href = "/settings"
             })

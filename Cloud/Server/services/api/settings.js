@@ -21,7 +21,7 @@ async function getSetting(id){
             pump_pin: element.pump_pin,
             trigger_percentage: element.trigger_percentage,
             pump_time: element.pump_time,
-            log: await log.getLog(element.log)
+            log: element.log
         })
     });
 
@@ -44,7 +44,7 @@ async function getSettings(){
                 pump_pin: element.pump_pin,
                 trigger_percentage: element.trigger_percentage,
                 pump_time: element.pump_time,
-                log: await log.getLog(element.log)
+                log: element.log
             })
         };
 

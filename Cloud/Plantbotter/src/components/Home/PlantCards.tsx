@@ -27,9 +27,9 @@ const PlantCards: React.FC<ContainerProps> = ({controller}) => {
                             <IonCardHeader>
                                 <IonCardTitle>{plant.name}</IonCardTitle>
                             </IonCardHeader>
-                            <IonCardContent>
+                            <IonCardContent>{/*
                                 <p>{lang.home.LastContactText}{getLastContact(plant.log)}</p>
-                                <p>{lang.home.DrynessText}{getLastSensorValue(plant.log)}%</p>
+                                <p>{lang.home.DrynessText}{getLastSensorValue(plant.log)}%</p> */}
                             </IonCardContent>
                         </IonCard>
                     ))

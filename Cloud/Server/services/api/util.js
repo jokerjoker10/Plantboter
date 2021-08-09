@@ -14,7 +14,7 @@ async function addController(){
         api_key: genApiKey(),
         name: "New Controller",
         plants: [],
-        cycle_time: 300,
+        cycle_time: 30000,
         command: null 
     };
     var data = await database.collection(controllerCollectionName).insertOne(newController)
@@ -201,7 +201,8 @@ async function updatePlant(log_id, req){
         },
         {
             upsert:true
-        });
+        }
+    );
 }
 
 

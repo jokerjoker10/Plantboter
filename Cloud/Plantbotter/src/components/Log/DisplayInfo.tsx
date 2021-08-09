@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonCard, IonCardTitle, IonContent, IonHeader, IonCardHeader, IonItem, IonRow, IonCardContent,IonGrid,IonCol } from '@ionic/react';
-import {getAllController, getLog, getLang, plant, controller} from '../../scripts/superStore';
+import {getAllController, log, getLang, plant, controller} from '../../scripts/superStore';
 
 var lang = getLang();
 var controllers: any = getAllController();
@@ -8,6 +8,7 @@ var controllers: any = getAllController();
 interface ContainerProps {
   plant: plant; 
   controller: controller;
+  log: log;
 }
 
 interface plantData {
@@ -20,7 +21,7 @@ interface plantData {
   pump_pin: Number;
 };
 
-const DisplayInfo: React.FC<ContainerProps> = ({ plant, controller }) => {
+const DisplayInfo: React.FC<ContainerProps> = ({ plant, controller, log}) => {
   var output: plantData = {
     controllerid: "",
     controllername: "",
@@ -42,12 +43,11 @@ const DisplayInfo: React.FC<ContainerProps> = ({ plant, controller }) => {
       pump_pin : Number(plant.pump_pin)
     }
   }
-  var logs = plant.log;
 
   var datapointCount = 0; 
   var waterCount = 0;
 
-    logs.logs.forEach((element:any) => {
+    log.logs.forEach((element:any) => {
       if(element.type === "value_log")
         datapointCount ++;
       if(element.type === "water_log")

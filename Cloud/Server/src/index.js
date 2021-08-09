@@ -13,27 +13,8 @@ let frontRoutes = require('../routes/frontroute');
 // defining the Express app
 const app = express();
 
-const allowedOrigins = [
-    'capacitor://localhost',
-    'ionic://localhost',
-    'http://localhost',
-    'http://localhost:8080',
-    'http://localhost:8100'
-  ];
-  
-  // Reflect the origin if it's in the allowed list or not defined (cURL, Postman, etc.)
-  const corsOptions = {
-    origin: (origin, callback) => {
-      if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Origin not allowed by CORS'));
-      }
-    }
-  }
-  
-  // Enable preflight requests for all routes
-  app.options('*', cors(corsOptions));
+// Enable preflight requests for all routes
+app.use(cors());
   
 // adding Helmet for API's security
 app.use(helmet());
@@ -56,6 +37,6 @@ app.use('/api', apiRoutes);
 app.use('/front', frontRoutes);
 
 // starting the server
-app.listen(3001, () => {
-    console.log('listening on port 3001');
+app.listen(5103, () => {
+    console.log('listening on port 5103');
 });

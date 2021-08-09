@@ -47,6 +47,10 @@ router.get('/getlog/:log_id', async function(req, res){
     res.send(await apilog.getLog(req.params.log_id))
 })
 
+router.get('/logmeta/:log_id', async function(req, res){
+    res.send(await apilog.getLogMeta(req.params.log_id))
+})
+
 router.get('/detailedlog/:start/:end/:log_id', async function(req, res){
     res.send(await apilog.getDetailedLog(req.params.log_id, req.params.start, req.params.end))
 })

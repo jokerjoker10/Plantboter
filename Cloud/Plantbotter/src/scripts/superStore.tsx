@@ -25,7 +25,7 @@ export interface plant {
     pump_pin: number;
     trigger_percentage: number;
     pump_time: number;
-    log: log;
+    log: string;
 }
 
 export interface plantUpdate {

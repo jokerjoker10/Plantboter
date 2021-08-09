@@ -81,22 +81,29 @@ void loop(){
       Serial.println("Error");
     }
 
+      Serial.println(pump_time);
     
     //test if need to water
     if(waterPlant){
-      Serial.println("Watering plant");
+      Serial.print("Watering plant");
       cloud.logData((String)JSON.stringify(log_id), "water_log", 100);
-      
+      Serial.print(".");
       //setting the pump
-      pinMode(pump_pin, OUTPUT);
       
+      Serial.print(".");
+      pinMode(pump_pin, OUTPUT);
+      Serial.print(".");
       digitalWrite(pump_pin, LOW);
+      Serial.print(".");
       delay(pump_time);
+      Serial.print(".");
       digitalWrite(pump_pin, HIGH);
+      Serial.print(".");
+      Serial.println("Done");
     }
     
     Serial.println("");
   }
-  delay(cycle_time);
+  delay((int)cycle_time);
   Serial.println("\n");
 }

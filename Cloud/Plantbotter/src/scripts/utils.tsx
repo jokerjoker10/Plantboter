@@ -17,7 +17,7 @@ function getAllPlantsIndexList(con: Array<controller>): Array<string>{
     var plant_list: Array<string> = [];
     con.forEach(element => {
         element.plants.forEach(plant => {
-            plant_list.push(plant.log._id);
+            plant_list.push(plant.log);
         });
     });
     return plant_list;
@@ -27,7 +27,7 @@ function getPlantDataFromIndex(plant_index: string, con: Array<controller>): pla
     //get plant data by index
     con.forEach(element => {
         element.plants.forEach(plant => {
-            if(plant.log._id == plant_index){
+            if(plant.log == plant_index){
                 return plant;
             }
         });
@@ -42,10 +42,7 @@ function getPlantDataFromIndex(plant_index: string, con: Array<controller>): pla
         pump_pin: 0,
         trigger_percentage: 0,
         pump_time: 0,
-        log: {
-            _id: "",
-            logs: []
-        },
+        log: ""
     }
 }
 
@@ -84,6 +81,7 @@ function getLastContact(log: log): string {
 }
 
 function getLastSensorValue(log: log){
+
     if(log.logs == undefined || log.logs.length == 0){
         return "--"
     }
@@ -115,8 +113,8 @@ function loadImg(plant: plant){
     }
 }
 
-function getLogRedirect(log: log){
-    return "/log/" + log._id;
+function getLogRedirect(log: string){
+    return "/log/" + log;
 }
 
 export {

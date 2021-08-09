@@ -4,7 +4,6 @@ import {getAllController, controllerUpdate, getLang, controller, addPlant, updat
 import {trashBinOutline, saveOutline, optionsOutline, addOutline, copyOutline} from 'ionicons/icons';
 import './DisplayController.css'
 import DisplayPlantSettings from './PlantSettings';
-import { isWhiteSpaceLike } from 'typescript';
 
 var lang = getLang();
 var controllers = getAllController();

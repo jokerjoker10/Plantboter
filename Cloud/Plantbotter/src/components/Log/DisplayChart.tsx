@@ -1,17 +1,16 @@
 import React from 'react';
 import { IonCard, IonCardTitle, IonContent, IonHeader, IonCardHeader, IonTitle, IonToolbar, IonCardContent,IonGrid,IonCol } from '@ionic/react';
-import {plant, getLog, getLang} from '../../scripts/superStore';
+import {log, getLog, getLang} from '../../scripts/superStore';
 import { Line } from 'react-chartjs-2';
 import './logComponent.css'
 
 var lang = getLang();
 
 interface ContainerProps {
-  plant: plant;
+  log: log;
 }
 
-const DisplayChart: React.FC<ContainerProps> = ({ plant }) => {
-  var log = plant.log;
+const DisplayChart: React.FC<ContainerProps> = ({ log }) => {
   var _labels: any = [];
   log.logs.forEach((element:any) => {
     var date = new Date(element.timestamp);
