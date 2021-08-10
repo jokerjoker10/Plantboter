@@ -2,10 +2,9 @@ CREATE DATABASE `Plantboter`;
 
 CREATE TABLE `Users` (
     `id` int unsigned PRIMARY KEY AUTO_INCREMENT,
-    `username` varchar(25) NOT NULL UNIQUE,
     `email` varchar(50) NOT NULL UNIQUE,
     `password` varchar(255) NOT NULL,
-    `admin` BOOLEAN DEFAULT 0,
+    `admin` BOOLEAN NOT NULL DEFAULT 0,
     `session` varchar(255),
     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
 );
@@ -15,7 +14,7 @@ CREATE TABLE `Controllers` (
     `user_id` int unsigned NOT NULL,
     `name` varchar(50) NOT NULL,
     `cycle_time` smallint unsigned NOt NULL DEFAULT 30000,
-    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES `Users`(`id`)
 );
 
