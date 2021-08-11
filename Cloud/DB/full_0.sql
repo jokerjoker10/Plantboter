@@ -34,7 +34,7 @@ CREATE TABLE `Plants` (
     `pump_pin` varchar(3),
     `triger_percentage` smallint unsigned NOT NULL DEFAULT 40,
     `sensor_type` enum(`digital`, `analog`) NOT NULL,
-    `pump_type` mediumint unsigned NOT NULL,
+    `pump_time` mediumint unsigned NOT NULL,
     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`controller_id`) REFERENCES `Controllers`(`id`)
 );
@@ -44,17 +44,11 @@ CREATE TABLE `Logs` (
     `log_source` enum(`plant`, `controller`) NOT NULL,
     `plant_id` int unsigned,
     `controller_id`int unsigned,
-    `type` enum(`moisture_level`, `pump_action`, `system_boot`) NOT NULL,
+    `type` enum(`moisture_level`, `pump_action`, `system_boot`, `api_key_change`) NOT NULL,
     `data` json NOT NULL,
     `api_key_id` int unsigned NOT NULL,
     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`plant_id`) REFERENCES `Plants`(`id`),
     FOREIGN KEY (`controller_id`) REFERENCES `Controllers`(`id`),
     FOREIGN KEY (`api_key_id`) REFERENCES `ApiKeys`(`id`)
-);
-
-CREATE TABLE `DatabaseVersion` (
-    `id` smallint unsigned PRIMARY KEY AUTO_INCREMENT,
-    `version` smallint NOT NULL,
-    `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
 );
