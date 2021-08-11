@@ -1,29 +1,20 @@
 const Sequelize = require('sequelize');
 const db = require('../Database/database');
+const users = require('./users');
 
-const Users = db.define('users', {
+const controllers = db.define('controllers', {
     id: {
         type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true
     },
-    email: {
-        type: Sequelize.STRING.unique,
-        allowNull: false,
-        unique: true
-    },
-    password: {
+    name: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
-    admin: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-    },
-    session: {
-        type: Sequelize.STRING
+    cycle_time: {
+        type: Sequelize.SMALLINT.UNSIGNED,
+        allowNull: false
     },
     created_at: {
         type: Sequelize.DATE,
@@ -35,4 +26,4 @@ const Users = db.define('users', {
     underscored: true
 });
 
-module.exports = Users;
+controllers.belongsTo(users);
