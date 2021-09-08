@@ -12,6 +12,9 @@ New Features:
 - [ ] Login
 - [ ] Controller and Plant Settings
 
+Updated Features:
+- [ ] Redo the Server to Support MySql Instead of MongoDB
+
 ### Beta V0.2.0
 ***
 New Features:
@@ -22,7 +25,6 @@ New Features:
 Updated Features:
 - [ ] Bug Fixes
 - [ ] Rework Controller and Plant Settings
-- [ ] Redo the Server to Support MySql Instead of MongoDB
 
 ### V1.0.0
 ***
