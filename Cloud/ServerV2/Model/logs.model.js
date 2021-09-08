@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
 const db = require('../Database/database');
 
-const controllers = require('./controllers');
+const controllers = require('./controllers.model');
 const plants = require('./plants');
-const api_keys = require('./apikeys');
+const api_keys = require('./apikeys.model');
 const users = require('./users');
 
 const logs = db.define('logs', {

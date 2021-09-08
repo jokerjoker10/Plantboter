@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('../Database/database');
-const controllers = require('./controllers');
+const controllers = require('./controllers.model');
 
 const plants = db.define('plants', {
     id: {

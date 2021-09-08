@@ -1,10 +1,4 @@
-const { cryptoRandomString } = require('crypto-random-string');
 const bcrypt = require('bcrypt');
-
-// get crypt session key
-function getSessionCrypt() {
-    return cryptoRandomString({length: 255, type: 'base64'});
-}
 
 // encrypts passwodd to be saved in database
 function cryptPassword(password, callback) {
@@ -19,16 +13,17 @@ function cryptPassword(password, callback) {
 }
 
 // compare a plain password to a hashed to find out if it 
-function comparePassword(plainpass, hashword, callback) {
-    bcrypt.compare(plainpass, hashword, function(err, result){
-        return err == null?
-            callback(null, result):
-            callback(err)
+let comparePassword = new Promise(function(plainpass, hashword) {
+    bcrypt.compare(plainpass, hashword, (err, result) => {
+        if(err){
+            throw err;
+        }
+        
+        return result;
     });
-}
+});
 
 module.exports = {
-    getSessionCrypt,
     cryptPassword,
     comparePassword
 }

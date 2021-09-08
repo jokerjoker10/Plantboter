@@ -3,8 +3,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 // route modules
-const apiroute = require('./apiroute');
-const frontroute = require('./frontroute');
+const apiroute = require('./api.route');
+const frontroute = require('./front.route');
 const db = require('../Database/database');
 
 app.use(bodyParser.json());

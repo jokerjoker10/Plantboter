@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=,2, initial-scale=1.0">
+    <title>Email Verification</title>
+</head>
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: white;
+        background-color: #3e4740;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    a {
+        color: white;
+    }
+
+    .text {
+        margin: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+
+    .button_container {
+        display: flex;
+        justify-content: center;
+        flex-flow: row wrap;
+        height: 50px;
+    }
+
+    .button a {
+        margin-top: 30px;
+        text-decoration: none;
+        padding: 20px;
+        border: 1px solid #46D92B;
+        border-radius: 5px;
+        background-color: #46D92B;
+    }
+
+    .subtext {
+        display: flex;
+        justify-content: center;
+        margin: 30px;
+    }
+
+    .subtext a {
+        margin: 10px;
+    }
+
+    .subtext p {
+        margin: 10px;
+    }
+</style>
+<body>
+    <h1>
+        Email Verification
+    </h1>
+    <div class="text">
+        <p>
+            To activate your account either enter this code: {key}
+        </br>
+            on this website: <a href="https://{url}/verifymail?m={email}">https://{url}/verifymail</a>
+        </br>  
+        </br>
+            or klick this button:
+        </p>
+    </div>
+    <div class="button_container">
+        <div class="button"></div>
+        <div class="button">
+            <a href="https://{url}/verifymail?k={key}&m={email}">Activate your account</a>
+        </div>
+        <div class="button"></div>
+    </div>
+    <div class="subtext">
+        <a href="https://github.com/jokerjoker10/Plantboter">GitHub</a>
+        <p>
+            &#169; {year} jokerjoker10
+        </p>
+    </div>
+</body>
+</html>

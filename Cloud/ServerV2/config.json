@@ -1,15 +1,29 @@
 {
     "database": {
-        "database" : "<Database Name>",
-        "username" : "<Username>",
-        "password" : "<Password>",
-        "host" : "<Host>",
+        "database" : "",
+        "username" : "",
+        "password" : "",
+        "host" : "",
         "pool": {
             "max": 5,
             "min": 0,
             "acquire": 30000,
             "idle": 10000
         }
+    },
+    "email": {
+        "host": "",
+        "port": 587,
+        "secure": false,
+        "auth": {
+            "user": "",
+            "pass": ""
+        }
+    },
+    "domain": "localhost",
+    "auth": {
+        "allow_regrestration": true,
+        "token_key": ""
     },
     "settings": {
         "controller": {

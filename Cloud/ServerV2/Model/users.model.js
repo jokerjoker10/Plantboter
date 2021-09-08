@@ -8,22 +8,23 @@ const Users = db.define('users', {
         autoIncrement: true
     },
     email: {
-        type: Sequelize.STRING.unique,
-        allowNull: false,
-        unique: true
-    },
-    password: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
+    },
+    email_confirmed: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    password: {
+        type: Sequelize.STRING,
+        allowNull: false
     },
     admin: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
-    },
-    session: {
-        type: Sequelize.STRING
     },
     created_at: {
         type: Sequelize.DATE,
