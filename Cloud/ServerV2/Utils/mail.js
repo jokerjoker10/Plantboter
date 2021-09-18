@@ -3,17 +3,18 @@ const nodemailer = require("nodemailer");
 const mail_model = require("../Model/mail.model");
 const fs = require('fs')
 
-const sendVerificationMail = (user) => {
+const sendKeyMail = (user, type) => {
     return new Promise((resolve, reject) => {
         email = user.dataValues.email;
-        createMailCode(user, 'mail_verification')
+        createMailCode(user, type)
         .then((mail_key) => {
             if(!mail_key){
                 reject("Key Generation Failed");
                 return;
             }
 
-            sendMailVerification(mail_key.dataValues.key, email)
+            //sending mail
+            sendMailWithKey(mail_key.dataValues.key, email, type)
             .then((mail_report) => {
                 updateMailSendData(mail_key, mail_report)
                 .then(() => {
@@ -40,7 +41,8 @@ const sendVerificationMail = (user) => {
 const createMailCode = (user, mail_type) => {
     return new Promise((resolve, reject) => {
         email = user.dataValues.email;
-        if(mail_type != ('mail_verification' || 'password_reset')){
+        console.log(mail_type)
+        if(!['mail_verification', 'password_reset'].includes(mail_type)){
             reject("Mail Type must either be 'mail_verification' or 'password_reset'");
             return;
         }
@@ -50,7 +52,7 @@ const createMailCode = (user, mail_type) => {
             return;
         }
 
-        if(user.dataValues.email_confirmed){
+        if(user.dataValues.email_confirmed && mail_type == 'mail_verification'){
             reject("Email already Confirmed");
             return;
         }
@@ -62,7 +64,7 @@ const createMailCode = (user, mail_type) => {
         });
 
         //generate code
-        var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+';
+        var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         var generated_key = '';
         for ( var i = 0; i < 8; i++ ) {
             generated_key += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
@@ -105,19 +107,34 @@ const updateMailSendData = (mail_key, mail_report) => {
     });
 }
 
-async function sendMailVerification(key, email){
-    let transporter = getTransporter();
-    let html_content = String(fs.readFileSync('Utils/MailHtml/mailverification.html', 'utf-8'))
+async function sendMailWithKey(key, email, type){
+    var transporter = getTransporter();
+    //html code
+    var html_content = "";
+    if (type == 'mail_verification')
+        html_content = fs.readFileSync('Utils/MailHtml/mailverification.html', 'utf-8');
+    else if (type == 'password_reset')
+        html_content = fs.readFileSync('Utils/MailHtml/passwordreset.html', 'utf-8');
+
+    //insert data into HTML file
+    html_content = html_content
     .replaceAll('{key}', key)
-    .replaceAll('{url}', config.domain)
+    .replaceAll('{url}', config.domains.frontend)
     .replaceAll('{email}', email)
     .replaceAll('{year}', new Date().getFullYear());
     
-    let mail_info = await transporter.sendMail({
+    //subject
+    var subject = "";
+    if (type == 'mail_verification')
+        subject = "Email Verification"
+    else if(type == 'password_reset')
+        subject = "Password Reset"
+
+    var mail_info = await transporter.sendMail({
         from: 'Plantboter 🌱 <' + config.email.auth.user + '>',
         to: email,
-        subject: 'Email verification',
-        text: 'Your activation code is: ' + key,
+        subject: subject,
+        text: 'Your key is: ' + key,
         html: html_content
     });
     
@@ -129,5 +146,5 @@ function getTransporter(){
 }
 
 module.exports = {
-    sendVerificationMail 
+    sendKeyMail: sendKeyMail 
 }
