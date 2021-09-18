@@ -17,12 +17,15 @@
 //      The regex object is used with the test function
 //
 //  allow_whitespaces <bool> <optional<default:true>>
-//      If this is false the and the string includes whitespaces the test will fail
+//      If this is false and the string includes whitespaces the test will fail
 //
 //  aliases <list> <optional<default:empty>>
 //      If there are strings in this list the same test can be used for multiple keys
+//
+// allow_null <bool> <optional<default:true>>
+//      If this is false and the value is null the test will fail
 
-const tests = {
+const TESTS = {
     email: {
         regex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         allow_whitespaces: false
@@ -30,7 +33,8 @@ const tests = {
     password: {
         regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*!@$%&?/~_=|]).{8,32}$/,
         aliases: ['second_password'],
-        allow_whitespaces: false
+        allow_whitespaces: false,
+        allow_null: false
     }
 }
 
@@ -38,7 +42,7 @@ const tests = {
 //automaticaly interupts request if input is not in the 
 var checkInput = (req, res, next) => {
     var data_list = createDatalist(req.body)
-    var test_list = createTestlist(tests);
+    var test_list = createTestlist(TESTS);
 
     var keys = Object.keys(data_list);
     for(var i = 0; i < keys.length; i++){
@@ -89,6 +93,21 @@ var checkInput = (req, res, next) => {
 //@returns : On error or failing test response with status code and error message
 //           On ok test null
 function testData(data, test, key, res){
+    //allow_null test
+    if(Object.keys(test).includes('allow_null')){
+        if(!test.allow_null && data == null){
+            return res.status(400).json({
+                message: "For key: " + key + " is null not allowed"
+            })
+        }
+    }
+
+    //null test (rexex cannot be testet on null)
+    if(data == null){
+        return null;
+    }
+
+    //whitespace test
     if(Object.keys(test).includes('allow_whitespaces')){
         if(!test.allow_whitespaces && data.includes(' ')){
             return res.status(400).json({
@@ -96,7 +115,8 @@ function testData(data, test, key, res){
             })
         }
     }
-    
+
+    //regex test
     if(!test.regex.test(data)){
         return res.status(400).json({
             message: "Error: Input Test failed on your Request because the input does not comply with the regulations for: \'" + key + "\'"
@@ -117,7 +137,7 @@ function createDatalist(data, data_list = {}){
     for(var key_index = 0; key_index < keys.length; key_index++){
         var current_data = data[keys[key_index]];
         if(typeof current_data == 'object'){
-            if(Object.prototype.toString.call(current_data) == '[object Array]'){
+            if(Object.prototype.toString.call(current_data) == '[object Array]' || current_data == null){
                 data_list[keys[key_index]] = current_data;
                 continue;
             }
@@ -147,4 +167,7 @@ function createTestlist(tests){
     return test_list;
 }
 
-module.exports = checkInput;
+module.exports = {
+    checkInput: checkInput,
+    TESTS: TESTS
+};

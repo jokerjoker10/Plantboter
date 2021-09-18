@@ -9,7 +9,7 @@ const frontroute = require('./front.route');
 const db = require('../Database/database');
 
 app.use(bodyParser.json());
-app.use(inputCheck);
+app.use(inputCheck.checkInput);
 
 // defining routes
 app.use('/api/v1', cors(), apiroute);
