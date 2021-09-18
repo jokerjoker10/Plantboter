@@ -1,7 +1,8 @@
 const app = require('express')();
 
-const userRoute = require('./user.route');
-const mailRoute = require('./mail.route')
+const userRoute = require('./Front/user.route');
+const mailRoute = require('./Front/mail.route');
+const settingsRoute = require('./Front/settings.route');
 
 app.get('/', function(req, res) {
     res.send('Front Route: Please Read the documentation for information on usage.');
@@ -9,5 +10,6 @@ app.get('/', function(req, res) {
 
 app.use('/user', userRoute);
 app.use('/mail', mailRoute);
+app.use('/settings', settingsRoute);
 
 module.exports = app;
