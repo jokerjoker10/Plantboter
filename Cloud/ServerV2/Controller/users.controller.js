@@ -12,7 +12,8 @@ var usersController = {
     loginUser: loginUser,
     updateUser: updateUser,
     deleteUser: deleteUser,
-    getUserByMail: getUserByMail
+    getUserByMail: getUserByMail,
+    activateMail: activateMail
 }
 
 // adds a new user to the database
@@ -244,6 +245,10 @@ function deleteUser(_id) {
 
 function getUserByMail(email){
     return user_model.findOne({where: {email: email}});
+}
+
+function activateMail(user_id){
+    return user_model.update({email_confirmed : true}, {where: {id: user_id}})
 }
 
 module.exports = usersController;
