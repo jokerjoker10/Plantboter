@@ -35,6 +35,11 @@ const TESTS = {
         aliases: ['second_password'],
         allow_whitespaces: false,
         allow_null: false
+    },
+    key : {
+        regex: /^[0-9A-Za-z]{8}$/,
+        allow_whitespaces: false,
+        allow_null: false
     }
 }
 
