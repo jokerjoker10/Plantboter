@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 var usersController = {
     addUser: addUser,
     getUserById: getUserById,
-    authenticateUser: authenticateUser,
+    getUser: getUser,
     loginUser: loginUser,
     updateUser: updateUser,
     deleteUser: deleteUser,
@@ -102,18 +102,31 @@ function getUserById(req, res) {
     });
 }
 
-function authenticateUser(_session) {
-    user_model.findAll({where: {session: _session}})
-    .then((data) => {
-        data.password = null,
-        data.session = null
-        return (true, data);
+//finding user from jwt token id and email
+function getUser(req, res) {
+    user_model.findOne({where: {id : req.jwt_decode.id, email: req.jwt_decode.email}})
+    .then((user) => {
+        user.password = null;
+        if(req.originalUrl == '/front/user/getUser'){
+            res.status(200)
+            .json({
+                message: "User found",
+                user: user
+            });
+        }
+        return user;
     })
-    .catch((err) => {
-        return (false, {})
+    .catch((error) => {
+        if(req.originalUrl == '/front/user/getUser'){
+            res.status(404)
+            .json({
+                message: "User not found",
+                error: error
+            });
+        }
+        throw error;
     });
 }
-
 
 //Login User by looking up mail in db and comparing passwords
 function loginUser(req, res) {
@@ -161,18 +174,21 @@ function loginUser(req, res) {
                 
                 data.dataValues.token = token;
 
-                res.status(200)
+                res
+                .setHeader("x-access-token", token)
+                .status(200)
                 .json({
                     message: "User logged in",
                     user: data.dataValues
                 });
-
+                return;
             }
             else {
                 res.status(401)
                 .json({
                     message: "Email or Password wrong"
                 });
+                return;
             }
         })
         .catch((error) => {
@@ -181,6 +197,7 @@ function loginUser(req, res) {
             .json({
                 message: "User authentification failed"
             });
+            return;
         });
     })
     .catch((error) => {
@@ -189,6 +206,7 @@ function loginUser(req, res) {
         .json({
             message: "Email or Password Wrong"
         });
+        return;
     });
 }
 
