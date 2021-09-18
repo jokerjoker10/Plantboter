@@ -1,0 +1,150 @@
+//Tests
+//A test is defined by a object inside the tests object. The key of the object is the name of the key it will test.
+//for example: the input is:
+//  {
+//      "email": "testmail@test.de"
+//  }
+//
+//the corresponding test would be:
+//  {
+//      email: {
+//          regex: some regexex test
+//      }    
+//  }
+//
+//The Test object supports multiple keys:
+//  regex <regex> <required>
+//      The regex object is used with the test function
+//
+//  allow_whitespaces <bool> <optional<default:true>>
+//      If this is false the and the string includes whitespaces the test will fail
+//
+//  aliases <list> <optional<default:empty>>
+//      If there are strings in this list the same test can be used for multiple keys
+
+const tests = {
+    email: {
+        regex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        allow_whitespaces: false
+    },
+    password: {
+        regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*!@$%&?/~_=|]).{8,32}$/,
+        aliases: ['second_password'],
+        allow_whitespaces: false
+    }
+}
+
+//middle ware
+//automaticaly interupts request if input is not in the 
+var checkInput = (req, res, next) => {
+    var data_list = createDatalist(req.body)
+    var test_list = createTestlist(tests);
+
+    var keys = Object.keys(data_list);
+    for(var i = 0; i < keys.length; i++){
+        var key = keys[i];
+
+        //test if test for key exists
+        if(test_list[key] == undefined){
+            return res.status(400).json({
+                message: "Error: \'" + key + "\' is unknown"
+            });
+        }
+
+        //define vars with test and the data to test
+        var data = data_list[key];
+        var test = test_list[key];
+        
+        //test if data is array and loop over it if it is. Else it will just test the value.
+        if(Object.prototype.toString.call(data) == '[object Array]'){
+            for(var list_loop = 0; list_loop < data.length; list_loop++){
+                var result = testData(data[list_loop], test, key, res);
+                if(result != null){
+                    return result;
+                }
+            }
+        }
+        else{
+            var result = testData(data, test, key, res);
+            if(result != null){
+                return result;
+            }
+        }
+
+
+        req.body[key] = data;
+    }
+    
+    next();
+}
+
+//Tests a key value pair by the parameters given in the test object.
+//
+//@requires data : A string or a number that shall be tested
+//@requires test : A test object including the regex and other things 
+//                 that the data variable should be tested aginst.
+//@requires key : A string with the name of the key. Just to be displayed on error
+//@requires res : The response object by express
+//
+//@returns : On error or failing test response with status code and error message
+//           On ok test null
+function testData(data, test, key, res){
+    if(Object.keys(test).includes('allow_whitespaces')){
+        if(!test.allow_whitespaces && data.includes(' ')){
+            return res.status(400).json({
+                message: "For key: " + key + " are no whitespaces allowed"
+            })
+        }
+    }
+    
+    if(!test.regex.test(data)){
+        return res.status(400).json({
+            message: "Error: Input Test failed on your Request because the input does not comply with the regulations for: \'" + key + "\'"
+        })
+    }
+
+    return null;
+}
+
+//Creates a object with all key value pairs in it.
+//Goes recursively over all sub objects to extract only key: values
+//
+//@requires data : The object with all data that should be parsed
+//@optional data_list : Used to add data to the data_list on recursives
+function createDatalist(data, data_list = {}){
+    var keys = Object.keys(data);
+
+    for(var key_index = 0; key_index < keys.length; key_index++){
+        var current_data = data[keys[key_index]];
+        if(typeof current_data == 'object'){
+            if(Object.prototype.toString.call(current_data) == '[object Array]'){
+                data_list[keys[key_index]] = current_data;
+                continue;
+            }
+            createDatalist(current_data, data_list)
+        }
+        else {
+            data_list[keys[key_index]] = current_data;
+        }
+    }
+    return data_list;    
+}
+
+function createTestlist(tests){
+    var test_keys = Object.keys(tests);
+    var test_list = {}
+
+    for(var test_keys_index = 0; test_keys_index < test_keys.length; test_keys_index++){
+        var test = tests[test_keys[test_keys_index]];
+        if(Object.keys(test).includes('aliases')){
+            for(var alias = 0; alias < tests[test_keys[test_keys_index]].aliases.length; alias++){
+                test_list[test.aliases[alias]] = test
+            }
+        }
+        test_list[test_keys[test_keys_index]] = test;
+    }
+
+    return test_list;
+}
+
+module.exports = checkInput;

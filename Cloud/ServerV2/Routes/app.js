@@ -1,6 +1,7 @@
 const app = require('express')();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const inputCheck = require('../Utils/Middleware/inputcheck');
 
 // route modules
 const apiroute = require('./api.route');
@@ -8,6 +9,7 @@ const frontroute = require('./front.route');
 const db = require('../Database/database');
 
 app.use(bodyParser.json());
+app.use(inputCheck);
 
 // defining routes
 app.use('/api/v1', cors(), apiroute);
