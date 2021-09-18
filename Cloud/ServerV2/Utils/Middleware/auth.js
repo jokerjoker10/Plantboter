@@ -13,7 +13,6 @@ const authUser = (req, res, next) => {
         req.jwt_decode = decoded;
     }
     catch (err) {
-        console.log(err)
         return res.status(401).send("Invalid Token");
     }
 
