@@ -19,9 +19,19 @@ var usersController = {
 function addUser(req, res) {
     // check settings
     if (!config.auth.allow_regrestration) {
-        res.status(403).json({
+        res.status(403)
+        .json({
             message: "Regestration deactivated"
         })
+        return;
+    }
+
+    //check if password and second_password are the same
+    if (req.body.password != req.body.second_password){
+        res.status(400)
+        .json({
+            message: "password and second_password required to be the same"
+        });
         return;
     }
 
