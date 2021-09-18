@@ -9,10 +9,11 @@ const authUser = (req, res, next) => {
     }
 
     try {
-        const decode = jwt.verify(token, config.settings.auth.token_key);
-        req.user = decoded;
+        const decoded = jwt.verify(token, config.auth.token_key);
+        req.jwt_decode = decoded;
     }
     catch (err) {
+        console.log(err)
         return res.status(401).send("Invalid Token");
     }
 
