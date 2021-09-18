@@ -7,6 +7,7 @@ const config = require("../Utils/settings").getSettings();
 
 var mailController = {
     verifyEmail: verifyEmail,
+    resetPassword: resetPassword,
     sendMailVerification: sendMailVerification,
     sendPasswordResetMail: sendPasswordResetMail
 }
@@ -17,6 +18,7 @@ function verifyEmail(req, res){
         .json({
             message: "Key and email are required"
         }); 
+        return;
     }
 
     user_controller.getUserByMail(req.body.email)
@@ -43,7 +45,7 @@ function verifyEmail(req, res){
             if(!mail_code.dataValues.active){
                 res.status(400)
                 .json({
-                    message: "Code inactive"
+                    message: "Key inactive"
                 });
                 return;
             }
@@ -85,6 +87,106 @@ function verifyEmail(req, res){
             });
             return;
         });
+    });
+}
+
+function resetPassword(req, res){
+    var jwt_decode = null;
+    var email = "";
+
+    if(token = req.headers["x-access-token"]){
+        try{
+            jwt_decode = jwt.verify(req.headers["x-access-token"], config.auth.token_key);
+        }
+        catch (err) {}
+    }
+
+    if(jwt_decode != null){
+        email = jwt_decode.email;
+    }
+    else if(Object.keys(req.body).includes('email')){
+        email = req.body.email
+    }
+    else{
+        res.status(400)
+        .json({
+            message: "Email or access token required"
+        });
+        return;
+    }
+
+
+    if(!req.body.key || !req.body.password || !req.body.second_password){
+        res.status(400)
+        .json({
+            message: "Key, password and second_password are required"
+        }); 
+        return;
+    }
+
+    if(req.body.password != req.body.second_password){
+        res.status(400)
+        .json({
+            message: "password and second_password must be the same"
+        });
+        return;
+    }
+
+    user_controller.getUserByMail(email)
+    .then((user) => {
+        mail_model.findOne({where: {key: req.body.key}})
+        .then((mail_code) => {
+            //check if code belongs to mail and if mail_code is found and if mail_type is mail_verification
+            if(mail_code == null || mail_code.dataValues.userId != user.dataValues.id || mail_code.dataValues.mail_type != 'password_reset'){
+                res.status(400)
+                .json({
+                    message: "Code unknown"
+                });
+                return;
+            }
+
+            if(!mail_code.dataValues.active){
+                res.status(400)
+                .json({
+                    message: "Key inactive"
+                });
+                return;
+            }
+
+            //reset password
+            user_controller.changePassword(req.body.password, user.dataValues.id)
+            .then((response) => {
+                res.status(200)
+                .json({
+                    message: "Password successfull updated"
+                });
+                return;
+            })
+            .catch((error) => {
+                res.status(500)
+                .json({
+                    message: "Saving new Password failed",
+                    error: error
+                });
+                return;
+            });
+        })
+        .catch((error) => {
+            console.log(error)
+            res.status(500)
+            .json({
+                message: "Finding Code Failed",
+                error: error
+            });
+            return;
+        });
+    })
+    .catch((error) =>  {
+        res.status(400)
+        .json({
+            message: "User not found",
+            error: error
+        })
     });
 }
 

@@ -10,10 +10,10 @@ var usersController = {
     getUserById: getUserById,
     getUser: getUser,
     loginUser: loginUser,
-    updateUser: updateUser,
     deleteUser: deleteUser,
     getUserByMail: getUserByMail,
-    activateMail: activateMail
+    activateMail: activateMail,
+    changePassword: changePassword
 }
 
 // adds a new user to the database
@@ -221,18 +221,6 @@ function loginUser(req, res) {
     });
 }
 
-function updateUser(user, _id) {
-    user_model.update({email: user.email}, {where: {id: _id}})
-    .then((data) => {
-        data.password = null;
-        data.session = null;
-        return data;
-    })
-    .catch((error) => {
-        console.log(error);
-    });
-}
-
 function deleteUser(_id) {
     user_model.destroy({where: {id: _id}})
     .then(() => {
@@ -249,6 +237,20 @@ function getUserByMail(email){
 
 function activateMail(user_id){
     return user_model.update({email_confirmed : true}, {where: {id: user_id}})
+}
+
+function changePassword(password, user_id){
+    return new Promise((resolve, reject) => {
+        crypt.cryptPassword(password, function(error, hash) {
+            if(error) {
+                reject(error);
+                return;
+            }
+            
+            resolve(user_model.update({password: hash}, {where: {id: user_id}}));
+            return;
+        })
+    })
 }
 
 module.exports = usersController;
