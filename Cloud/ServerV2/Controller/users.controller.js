@@ -7,13 +7,13 @@ const jwt = require("jsonwebtoken");
 
 var usersController = {
     addUser: addUser,
-    getUserById: getUserById,
     getUser: getUser,
     loginUser: loginUser,
     deleteUser: deleteUser,
     getUserByMail: getUserByMail,
     activateMail: activateMail,
-    changePassword: changePassword
+    changePassword: changePassword,
+    changeEmail: changeEmail
 }
 
 // adds a new user to the database
@@ -47,8 +47,8 @@ function addUser(req, res) {
         }
 
         // crypt password
-        crypt.cryptPassword(req.body.password, function(err, hash) {
-            if(err) {
+        crypt.cryptPassword(req.body.password, function(error, hash) {
+            if(error) {
                 res.status(500).json({
                     message: "Hashing Password Failed"
                 })
@@ -61,7 +61,7 @@ function addUser(req, res) {
                 password: hash
             })
             .then((data) => {
-                mailer.sendVerificationMail(data)
+                mailer.sendKeyMail(data, 'mail_verification')
                 .then((mail_report) => {
                     data.password = null;
                     res.status(201).json({
@@ -79,10 +79,10 @@ function addUser(req, res) {
                     });
                 });            
             })
-            .catch((err) => {
-                console.log(err);
+            .catch((error) => {
                 res.status(500).json({
-                    message: "Saving to Database failed"
+                    message: "Saving to Database failed",
+                    error: error
                 });
                 return;
             });
@@ -96,46 +96,33 @@ function addUser(req, res) {
     });    
 }
 
-function getUserById(req, res) {
-    user_model.findAll({where: {id: req.body.id}})
-    .then((data) => {
-        data.password = null,
-        data.session = null
-        res.status(200).json({
-            message: "User found",
-            user: data
-        })
-    })
-    .catch((err) => {
-        res.status(404).json({
-            message: "No sutch user"
-        })
-    });
-}
-
 //finding user from jwt token id and email
 function getUser(req, res) {
-    user_model.findOne({where: {id : req.jwt_decode.id, email: req.jwt_decode.email}})
-    .then((user) => {
-        user.password = null;
-        if(req.originalUrl == '/front/user/getUser'){
-            res.status(200)
-            .json({
-                message: "User found",
-                user: user
-            });
-        }
-        return user;
-    })
-    .catch((error) => {
-        if(req.originalUrl == '/front/user/getUser'){
-            res.status(404)
-            .json({
-                message: "User not found",
-                error: error
-            });
-        }
-        throw error;
+    return new Promise((resolve, reject) => {
+        user_model.findOne({where: {id : req.jwt_decode.id, email: req.jwt_decode.email}})
+        .then((user) => {
+            user.password = null;
+            if(req.originalUrl == '/front/user/getUser'){
+                res.status(200)
+                .json({
+                    message: "User found",
+                    user: user
+                });
+            }
+            resolve(user);
+            return;
+        })
+        .catch((error) => {
+            if(req.originalUrl == '/front/user/getUser'){
+                res.status(404)
+                .json({
+                    message: "User not found",
+                    error: error
+                });
+            }
+            reject(error);
+            return;
+        });
     });
 }
 
@@ -250,6 +237,61 @@ function changePassword(password, user_id){
             resolve(user_model.update({password: hash}, {where: {id: user_id}}));
             return;
         })
+    })
+}
+
+function changeEmail(req, res){
+    getUserByMail(req.body.email)
+    .then((double_mail_test) => {
+        if(double_mail_test == null){
+            getUser(req, res)
+            .then((user) => {
+                user_model.update({email_confirmed: false, email: req.body.email}, {where : {id : user.dataValues.id}})
+                .then(() => {
+                    mailer.sendKeyMail(user, 'mail_verification')
+                    .then((mail_report) => {
+                        res.status(201).json({
+                            message: "Email Updated",
+                            email_report: mail_report
+                        });
+                        return;
+                    })
+                    .catch((error) => {
+                        res.status(500)
+                        .json({
+                            message: "User updated but sending mail verification failed",
+                            error: error
+                        });
+                        return
+                    });  
+                })
+                .catch((error) => {
+                    console.log(error)
+                    res.status(500)
+                    .json({
+                        message: "Error updating user",
+                        error: error
+                    });
+                    return;
+                })
+                
+            })
+            .catch((error) => {
+                res.status(500)
+                .json({
+                    message: "Error getting user",
+                    error: error
+                });
+                return;
+            });
+        }
+        else{
+            res.status(500)
+            .json({
+                message: "Email is already in use"
+            });
+            return;
+        }
     })
 }
 
