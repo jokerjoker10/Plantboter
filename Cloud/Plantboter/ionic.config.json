@@ -1,0 +1,7 @@
+{
+  "name": "Plantboter",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
