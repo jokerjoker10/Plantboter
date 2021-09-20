@@ -1,19 +1,23 @@
 const app = require('express')();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const inputCheck = require('../Utils/Middleware/inputcheck');
+
+const config = require('../Utils/settings').getSettings();
+const db = require('../Database/database');
 
 // route modules
 const apiroute = require('./api.route');
 const frontroute = require('./front.route');
-const db = require('../Database/database');
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(inputCheck.checkInput);
 
 // defining routes
-app.use('/api/v1', cors(), apiroute);
-app.use('/front', frontroute);
+app.use('/apiv1', cors(), apiroute);
+app.use('/front', cors(), frontroute);
 
 // sync database
 db.sync()

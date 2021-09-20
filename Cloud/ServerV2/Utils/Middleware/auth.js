@@ -5,15 +5,20 @@ const authUser = (req, res, next) => {
     const token = req.headers["x-access-token"];
 
     if(!token){
-        return res.status(403).send("No authentification token provided");
+        return res.status(403)
+        .json({
+            message: "No authentification token provided"
+        });
     }
 
     try {
-        const decoded = jwt.verify(token, config.auth.token_key);
+        const decoded = jwt.verify(token, config.auth.access_token_key);
         req.jwt_decode = decoded;
     }
     catch (err) {
-        return res.status(401).send("Invalid Token");
+        return res.status(401).json({
+            message: "Invalid Token"
+        });
     }
 
     return next()

@@ -1,5 +1,6 @@
 const mailer = require("../Utils/mail");
 const mail_model = require("../Model/mail.model");
+const user_model = require("../Model/users.model");
 const user_controller = require("../Controller/users.controller");
 const jwt = require("jsonwebtoken");
 const e = require("express");
@@ -21,7 +22,7 @@ function verifyEmail(req, res){
         return;
     }
 
-    user_controller.getUserByMail(req.body.email)
+    user_model.findOne({where: {email: req.body.email}})
     .then((user) => {
         if(user.dataValues.email_confirmed){
             res.status(400)
@@ -51,7 +52,7 @@ function verifyEmail(req, res){
             }
 
             //activating user
-            user_controller.activateMail(user.id)
+            user_model.update({email_confirmed: true}, {where: {id: user.id}})
             .then((updated_user) => {
                 //deactivating code
                 mail_model.update({active: false},{where: {id: mail_code.dataValues.id}})
@@ -94,7 +95,7 @@ function resetPassword(req, res){
     var jwt_decode = null;
     var email = "";
 
-    if(token = req.headers["x-access-token"]){
+    if((null || undefined) != req.headers["x-access-token"]){
         try{
             jwt_decode = jwt.verify(req.headers["x-access-token"], config.auth.token_key);
         }
@@ -132,7 +133,7 @@ function resetPassword(req, res){
         return;
     }
 
-    user_controller.getUserByMail(email)
+    user_model.findOne({where: {email: email}})
     .then((user) => {
         mail_model.findOne({where: {key: req.body.key}})
         .then((mail_code) => {
@@ -191,7 +192,7 @@ function resetPassword(req, res){
 }
 
 function sendMailVerification(req, res){
-    user_controller.getUserByMail(req.body.email)
+    user_model.findOne({where: {email: req.body.email}})
     .then((user) => {
         mailer.sendKeyMail(user, 'mail_verification')
         .then((data) => {
@@ -214,13 +215,13 @@ function sendPasswordResetMail(req, res){
     var jwt_decode = null;
     var email = "";
 
-    if(token = req.headers["x-access-token"]){
+    if(req.headers["x-access-token"] != null){
         try{
-            jwt_decode = jwt.verify(req.headers["x-access-token"], config.auth.token_key);
+            jwt_decode = jwt.verify(req.headers["x-access-token"], config.auth.access_token_key);
         }
         catch (err) {}
     }
-
+    
     if(jwt_decode != null){
         email = jwt_decode.email;
     }
@@ -236,7 +237,7 @@ function sendPasswordResetMail(req, res){
     }
 
     //Input ok. Begin Sending Mail
-    user_controller.getUserByMail(email)
+    user_model.findOne({where: {email: email}})
     .then((user) => {
         mailer.sendKeyMail(user, 'password_reset')
         .then((data) => {

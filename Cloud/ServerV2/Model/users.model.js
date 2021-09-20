@@ -26,6 +26,11 @@ const Users = db.define('users', {
         allowNull: false,
         defaultValue: false
     },
+    refresh_token_version: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        defaultValue: 0
+    },
     created_at: {
         type: Sequelize.DATE,
         allowNull: false,

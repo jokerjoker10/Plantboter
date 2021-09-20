@@ -1,4 +1,4 @@
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 
 const server = require('./Routes/app');
 const pkg = require('./package.json');

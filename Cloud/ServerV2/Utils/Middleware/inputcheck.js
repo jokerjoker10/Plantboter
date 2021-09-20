@@ -108,7 +108,7 @@ function testData(data, test, key, res){
     }
 
     //null test (rexex cannot be testet on null)
-    if(data == null){
+    if(data == null || data == undefined){
         return null;
     }
 

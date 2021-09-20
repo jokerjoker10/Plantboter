@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { set } = require('../Routes/front.route');
 
 function getSettings() {
     var obj = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));

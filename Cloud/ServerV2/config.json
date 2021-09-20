@@ -1,9 +1,9 @@
 {
     "database": {
-        "database" : "",
-        "username" : "",
-        "password" : "",
-        "host" : "",
+        "database": "Plantboter",
+        "username": "",
+        "password": "",
+        "host": "",
         "pool": {
             "max": 5,
             "min": 0,
@@ -20,10 +20,14 @@
             "pass": ""
         }
     },
-    "domain": "localhost",
+    "domains":{
+        "frontend": "https://dashboard.plantboter.net",
+        "api" : "https://api.plantpoter.net"
+    },
     "auth": {
         "allow_regrestration": true,
-        "token_key": ""
+        "access_token_key": "",
+        "refresh_token_key": ""
     },
     "settings": {
         "controller": {
@@ -37,7 +41,9 @@
         "plants": {
             "trigger_percentage": {
                 "default": 40,
-                "allow_change": true 
+                "min": 0,
+                "max": 100,
+                "allow_change": true
             },
             "pump_time": {
                 "default": 300000,
