@@ -21,7 +21,7 @@ axios.interceptors.response.use((response) => {
 }, (error) => {
     const original_request = error.config;
     console.log(original_request)
-    let refresh_token = original_request;
+    let refresh_token = localStorage.getItem("refresh_token");
 
     if(refresh_token && error.response.status === 401 && !original_request._retry){
         original_request._retry = true;
@@ -31,6 +31,7 @@ axios.interceptors.response.use((response) => {
             .then((res) => {
                 if(res.status === 200){
                     localStorage.setItem("access_token", res.data.access_token);
+                    localStorage.setItem("refresh_token", res.data.refresh_token);
                     console.log("Access token refreshed!");
                     return axios(original_request);
                 }
@@ -73,10 +74,10 @@ const api = {
 
     //mail
     requestMailVerification: (body: Object) => {
-        return axios.get(base_url + ROUTES.MAIL.REQUEST_MAIL_VERIFICATION, body);
+        return axios.post(base_url + ROUTES.MAIL.REQUEST_MAIL_VERIFICATION, body);
     },
     requestPasswordReset: (body: Object) => {
-        return axios.get(base_url + ROUTES.MAIL.REQUEST_PASSWORD_RESET, body);
+        return axios.post(base_url + ROUTES.MAIL.REQUEST_PASSWORD_RESET, body);
     }
 }
 

@@ -17,7 +17,7 @@ app.use(inputCheck.checkInput);
 
 // defining routes
 app.use('/apiv1', cors(), apiroute);
-app.use('/front', cors(), frontroute);
+app.use('/front', cors({origin: config.domains.api}), frontroute);
 
 // sync database
 db.sync()

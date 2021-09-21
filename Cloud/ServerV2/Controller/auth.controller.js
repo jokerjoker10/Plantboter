@@ -61,10 +61,8 @@ function login(req, res){
                 },
                 config.auth.refresh_token_key,
                 {
-                  expiresIn: "31d",
+                  expiresIn: "30d",
                 });
-
-                data.dataValues.token = access_token;
 
                 data.dataValues.password = null;
                 data.dataValues.refresh_token_version = null;
@@ -74,7 +72,9 @@ function login(req, res){
                 .status(200)
                 .json({
                     message: "User logged in",
-                    user: data.dataValues
+                    user: data.dataValues,
+                    access_token: access_token,
+                    refresh_token: refresh_token
                 });
                 return;
             }
