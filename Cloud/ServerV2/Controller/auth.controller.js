@@ -66,16 +66,17 @@ function login(req, res){
 
                 data.dataValues.password = null;
                 data.dataValues.refresh_token_version = null;
+                
                 res
-                .setHeader("x-access-token", access_token)
-                .cookie("refresh_token", refresh_token, {httpOnly: true})
                 .status(200)
                 .json({
                     message: "User logged in",
                     user: data.dataValues,
                     access_token: access_token,
                     refresh_token: refresh_token
-                });
+                })
+                .setHeader("x-access-token", access_token)
+                .cookie("refresh_token", refresh_token, {httpOnly: true});
                 return;
             }
             else {
@@ -196,7 +197,6 @@ function logout(req, res){
     //increment refresh token version
     user_controller.getUser(req, res)
     .then((user) => {
-        console.log(user)
         user_model.update({refresh_token_version: user.dataValues.refresh_token_version + 1}, {where: {id: user.dataValues.id}})
         .then(() => {
             res.status(200)
@@ -227,7 +227,7 @@ function refreshToken(req, res){
     //compare versions
     //generate new access token
 
-    var refresh_token = req.cookies.refresh_token;
+    var refresh_token = req.body.refresh_token;
     //check if token is set in cookies
     if(refresh_token == undefined){
         res.status(401)
@@ -270,11 +270,11 @@ function refreshToken(req, res){
             user.dataValues.password = null;
             user.dataValues.refresh_token_version = null;
 
-            res.setHeader("x-access-token", access_token)
+            res
             .status(200)
             .json({
                 message: "Token Refreshed",
-                user: user.dataValues
+                access_token: access_token
             });
             return;
         }
