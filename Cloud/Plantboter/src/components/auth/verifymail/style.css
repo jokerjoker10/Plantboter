@@ -1,0 +1,12 @@
+.login-card {
+    max-width: 20%;
+    min-width: 250px;
+    margin: auto;
+}
+
+.resend-mail-card {
+    min-height: 100px;
+    max-width: 20%;
+    min-width: 250px;
+    margin: auto;
+}

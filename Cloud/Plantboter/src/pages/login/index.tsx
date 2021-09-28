@@ -1,8 +1,9 @@
 import { IonCardHeader, IonCard, IonContent, IonText, IonItem, IonPage, IonTitle, IonToolbar, IonCardContent, IonInput, IonButton, IonLabel, IonCardSubtitle, IonCardTitle, IonImg } from '@ionic/react';
-import './Login.css';
-import LoginComponent from '../components/login/Login';
-import RegisterComponent from '../components/register/Register';
-import VerifyMailComponent from '../components/verifymail/VerifyMail';
+import './style.css';
+import LoginComponent from '../../components/auth/login';
+import RegisterComponent from '../../components/auth/register';
+import VerifyMailComponent from '../../components/auth/verifymail';
+import ResetPassword from '../../components/auth/resetpassword';
 import { RouteComponentProps } from 'react-router';
 
 interface AuthPageProps extends RouteComponentProps<{
@@ -23,6 +24,9 @@ const Auth: React.FC<AuthPageProps> = ({match}) => {
           </div>
           <div style={{display: match.params.element == 'verifymail' ? "flex" : "none"}}>
             <VerifyMailComponent></VerifyMailComponent>
+          </div>
+          <div style={{display: match.params.element == 'resetpassword' ? "flex" : "none"}}>
+            <ResetPassword></ResetPassword>
           </div>
         </div>
       </IonContent>
