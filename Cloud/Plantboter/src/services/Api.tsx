@@ -6,9 +6,14 @@ const base_url = CONFIG.API_URL;
 
 //add auth token header to requests
 axios.interceptors.request.use((config) => {
-    const access_token = localStorage.getItem("acces_token");
-    if(access_token) {
+    const access_token = localStorage.getItem("access_token");
+    if (access_token) {
         config.headers["x-access-token"] = access_token;
+    }
+    else {
+        if (!new RegExp("/auth/", "g").test(window.location.pathname)) {
+            window.location.href = "/auth/login";
+        }
     }
     return config;
 }, (error) => {
@@ -23,18 +28,24 @@ axios.interceptors.response.use((response) => {
     console.log(original_request)
     let refresh_token = localStorage.getItem("refresh_token");
 
-    if(refresh_token && error.response.status === 401 && !original_request._retry){
+    if (refresh_token && error.response.status === 401 && !original_request._retry) {
         original_request._retry = true;
 
         return axios
-            .post(base_url + ROUTES.AUTH.REFRESH_TOKEN)
-            .then((res) => {
-                if(res.status === 200){
-                    localStorage.setItem("access_token", res.data.access_token);
-                    localStorage.setItem("refresh_token", res.data.refresh_token);
+            .post(base_url + ROUTES.AUTH.REFRESH_TOKEN, { refresh_token: refresh_token })
+            .then((response) => {
+                if (response.status == 200) {
+                    localStorage.setItem("access_token", response.data.access_token);
                     console.log("Access token refreshed!");
                     return axios(original_request);
                 }
+                else {
+                    //window.location.href = "/auth/login";
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                //window.location.href = "/auth/login";
             })
     }
     return Promise.reject(error);
@@ -47,7 +58,7 @@ const api = {
         return axios.post(base_url + ROUTES.AUTH.SIGNUP, body);
     },
     login: (body: Object) => {
-        return axios.post(base_url + ROUTES.AUTH.LOGIN, body);
+        return axios.post(base_url + ROUTES.AUTH.LOGIN, body)
     },
     logout: () => {
         return axios.delete(base_url + ROUTES.AUTH.LOGOUT);
