@@ -40,6 +40,9 @@ const TESTS = {
         regex: /^[0-9A-Za-z]{8}$/,
         allow_whitespaces: false,
         allow_null: false
+    },
+    refresh_token: {
+        regex: /^[\w-]*\.[\w-]*\.[\w-]*$/
     }
 }
 
