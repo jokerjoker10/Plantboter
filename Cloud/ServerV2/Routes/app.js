@@ -13,11 +13,10 @@ const frontroute = require('./front.route');
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(inputCheck.checkInput);
 
 // defining routes
-app.use('/apiv1', cors(), apiroute);
-app.use('/front', cors({origin: config.domains.api}), frontroute);
+app.use('/apiv1', cors(), inputCheck.checkInput, apiroute);
+app.use('/front', cors({origin: config.domains.frontend}), inputCheck.checkInput, frontroute);
 
 // sync database
 db.sync()
