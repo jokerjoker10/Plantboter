@@ -26,7 +26,8 @@ const sendKeyMail = (user, type) => {
                     return;
                 })
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error)
                 reject("Error Sending Mail");
                 return;
             });
@@ -112,16 +113,17 @@ async function sendMailWithKey(key, email, type){
     //html code
     var html_content = "";
     if (type == 'mail_verification')
-        html_content = fs.readFileSync('Utils/MailHtml/mailverification.html', 'utf-8');
+        html_content = String(fs.readFileSync('Utils/MailHtml/mailverification.html', 'utf-8'));
     else if (type == 'password_reset')
-        html_content = fs.readFileSync('Utils/MailHtml/passwordreset.html', 'utf-8');
+        html_content = String(fs.readFileSync('Utils/MailHtml/passwordreset.html', 'utf-8'));
 
     //insert data into HTML file
+    console.log(html_content);
     html_content = html_content
-    .replaceAll('{key}', key)
-    .replaceAll('{url}', config.domains.frontend)
-    .replaceAll('{email}', email)
-    .replaceAll('{year}', new Date().getFullYear());
+    .replace(/{key}/g, key)
+    .replace(/{url}/g, config.domains.frontend)
+    .replace(/{email}/g, email)
+    .replace(/{year}/g, new Date().getFullYear());
     
     //subject
     var subject = "";
