@@ -2,8 +2,8 @@ const ROUTES = {
     AUTH: {
         SIGNUP: "front/auth/signup",
         LOGIN: "front/auth/login",
-        LOGOUT: "front/auth/refreshtoken",
-        REFRESH_TOKEN: "front/auth/logout"
+        REFRESH_TOKEN: "front/auth/refreshtoken",
+        LOGOUT: "front/auth/logout"
     },
     USER: {
         GET_USER: "front/user/getUser",
