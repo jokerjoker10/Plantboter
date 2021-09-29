@@ -1,4 +1,4 @@
-import { IonCardHeader, IonCard, IonIcon, IonText, IonItem, IonPage, IonTitle, IonToolbar, IonCardContent, IonInput, IonButton, IonLabel, IonCardSubtitle, IonCardTitle, IonImg, IonContent } from '@ionic/react';
+import { IonCardHeader, IonCard, IonIcon, IonText, IonItem, IonPage, IonTitle, IonToolbar, IonCardContent, IonInput, IonButton, IonLabel, IonCardSubtitle, IonCardTitle, IonImg, IonContent, useIonViewDidEnter } from '@ionic/react';
 import { checkmarkOutline, closeOutline, warningOutline } from 'ionicons/icons';
 import './style.css';
 import api from '../../../services/Api';
@@ -17,18 +17,6 @@ const RegisterComponent: React.FC<ContainerProps> = () => {
 
   var [display_error, set_display_error] = useState('');
   const [loading, set_loading] = useState('none');
-
-  var settings_fetched = false;
-  if(!settings_fetched){
-    settings_fetched = true;
-    api.getSettings()
-    .then((settings) => {
-      set_allow_regestration(settings.data.settings.allow_regestration);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
 
   function handleSignup(){
     if(!email){
@@ -70,7 +58,7 @@ const RegisterComponent: React.FC<ContainerProps> = () => {
       set_loading('success');
       console.log("User Logged in");
       console.log(response.data)
-      window.location.href = "auth/verifymail"
+      window.location.href = "auth/verifymail?m=" + email;
     })
     .catch((error) => {
       set_loading('error');
@@ -87,6 +75,16 @@ const RegisterComponent: React.FC<ContainerProps> = () => {
     }
     return 'error';
   }
+
+  useIonViewDidEnter(() => {
+    api.getSettings()
+    .then((settings) => {
+      set_allow_regestration(settings.data.settings.allow_regestration);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }, []);
 
   return (
     <IonCard class="login-card">
@@ -107,6 +105,21 @@ const RegisterComponent: React.FC<ContainerProps> = () => {
           {display_error}
         </IonContent>
       </IonItem>
+
+      <IonCardContent>
+        <p>
+          To register to Plantboter please enter your email address and choose a passowrd.
+          The password must have the following criteria:
+        </p>
+        <p>
+          <ul>
+            <li>one or more capital letter</li>
+            <li>one or more lower case letter</li>
+            <li>one or more of these characters: *!@$%&?/~_=|</li>
+            <li>the entire password must between 8 and 32 letters</li>
+          </ul>
+        </p>
+      </IonCardContent>
 
       <IonCardContent>
         <IonItem>
