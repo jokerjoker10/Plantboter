@@ -39,7 +39,12 @@ const LoginComponent: React.FC<ContainerProps> = () => {
     })
     .catch((error) => {
       set_loading('error');
-      set_display_error(error.response.data.error || error.response.data.message || 'Unknown error');
+      if(error.response.status == 400){
+        set_display_error("Email or Password wrong");
+      }
+      else{
+        set_display_error(error.response.data.error || error.response.data.message || 'Unknown error');
+      }
     });
   }
 
