@@ -27,7 +27,6 @@ const sendKeyMail = (user, type) => {
                 })
             })
             .catch((error) => {
-                console.log(error)
                 reject("Error Sending Mail");
                 return;
             });
@@ -42,7 +41,7 @@ const sendKeyMail = (user, type) => {
 const createMailCode = (user, mail_type) => {
     return new Promise((resolve, reject) => {
         email = user.dataValues.email;
-        console.log(mail_type)
+
         if(!['mail_verification', 'password_reset'].includes(mail_type)){
             reject("Mail Type must either be 'mail_verification' or 'password_reset'");
             return;
@@ -118,7 +117,7 @@ async function sendMailWithKey(key, email, type){
         html_content = String(fs.readFileSync('Utils/MailHtml/passwordreset.html', 'utf-8'));
 
     //insert data into HTML file
-    console.log(html_content);
+    
     html_content = html_content
     .replace(/{key}/g, key)
     .replace(/{url}/g, config.domains.frontend)
