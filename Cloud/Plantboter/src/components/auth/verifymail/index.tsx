@@ -17,7 +17,7 @@ const VerifyMailComponent: React.FC<ContainerProps> = () => {
     const [email, set_email] = useState('');
     const [key, set_key] = useState('');
 
-    const [display_resnd_input, set_display_resnd_input] = useState(false);
+    const [display_resend_input, set_display_resend_input] = useState(false);
     const [resend_error, set_resend_error] = useState('');
     var [error_message, set_error_message] = useState('');
 
@@ -124,17 +124,23 @@ const VerifyMailComponent: React.FC<ContainerProps> = () => {
                     </IonContent>
                 </IonItem>
 
-                <IonItem>
-                    <IonText>
-                        We send a Mail to you with a Key.
-                    </IonText>
-                </IonItem>
+                <IonCardContent>
+                    <p>
+                        On Regestration we send an Email to you. This Mail Contains a key you have to enter here.
+                    </p>
+                    <p>
+                        You could also click the button in the Email and the confirmation will complete automaticaly.
+                    </p>
+                </IonCardContent>
                 <IonCardContent>
                     <IonItem>
                         <IonLabel position="floating">Key</IonLabel>
                         <IonInput type="text" name="key" value={key} onIonChange={(e: any) => set_key(e.target.value)}></IonInput>
                         <Loading status={check(key, "key").status} slot="end"></Loading>
                     </IonItem>
+                    <IonButton fill="outline" expand="block" onClick={e => set_display_resend_input(true)}>
+                        Dont have a key?
+                    </IonButton>
                     <IonItem>
                         <IonLabel position="floating">E-Mail</IonLabel>
                         <IonInput type="email" id="email" value={email} onIonChange={(e: any) => set_email(e.target.value)} autofocus={true} />
@@ -145,11 +151,6 @@ const VerifyMailComponent: React.FC<ContainerProps> = () => {
                     </IonButton>
                     <IonButton href="/auth/login" slot="center" fill="outline" expand="block">Back to Login</IonButton>
                 </IonCardContent>
-                <IonCardSubtitle>
-                    <IonItem button onClick={e => set_display_resnd_input(true)}>
-                        <IonLabel>No E-Mail? Resend</IonLabel>
-                    </IonItem>
-                </IonCardSubtitle>
             </IonCard>
 
             <IonCard color="warning" className="resend-mail-card" style={{ display: resend_error != '' ? "flex" : "none", marginTop: "10px"}}>
@@ -158,7 +159,12 @@ const VerifyMailComponent: React.FC<ContainerProps> = () => {
                 </IonCardContent>
             </IonCard>
 
-            <IonCard className="resend-mail-card" style={{ display: display_resnd_input ? "flex" : "none", marginTop: "10px"}}>
+            <IonCard className="resend-mail-card" style={{ display: display_resend_input ? "block" : "none", marginTop: "10px"}}>
+                <IonCardContent>
+                    <p>
+                        If you didn't recieved an email. You can request a new one. 
+                    </p>
+                </IonCardContent>
                 <IonCardContent>
                     <IonItem >
                         <IonLabel position="floating">E-Mail</IonLabel>
