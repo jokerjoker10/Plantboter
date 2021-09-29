@@ -31,7 +31,7 @@ const TESTS = {
         allow_whitespaces: false
     },
     password: {
-        regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*!@$%&?/~_=|]).{8,32}$/,
+        regex: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*!@$%&?/~_=|#^]).{8,32}$/,
         aliases: ['second_password'],
         allow_whitespaces: false,
         allow_null: false
