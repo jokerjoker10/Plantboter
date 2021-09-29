@@ -26,6 +26,15 @@ function login(req, res){
     //find user by mail and start login procedure
     user_model.findOne({where: {email: req.body.email}})
     .then((data) => {
+        
+        //check if user exists
+        if(!data){
+            res.status(400)
+            .json({
+                message: "Email or Password wrong"
+            });
+            return;
+        }
 
         //forbid user login if email is not confirmed
         if(!data.dataValues.email_confirmed){
