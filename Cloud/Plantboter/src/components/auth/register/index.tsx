@@ -108,7 +108,7 @@ const RegisterComponent: React.FC<ContainerProps> = () => {
 
       <IonCardContent>
         <p>
-          To register to Plantboter please enter your email address and choose a passowrd.
+          To register to Plantboter please enter your email address and choose a passoword.
           The password must have the following criteria:
         </p>
         <p>
