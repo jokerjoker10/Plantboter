@@ -5,7 +5,7 @@ import api from '../../services/Api';
 import React, { useEffect } from 'react';
 import UserHeader from '../../components/user/userheader';
 import ChangeEmail from '../../components/user/changeemail';
-
+import ChangePassword from '../../components/user/changepassword';
 
 const User: React.FC = () => {
     return (
@@ -20,6 +20,7 @@ const User: React.FC = () => {
                 <div className="user_settings">
                     <UserHeader></UserHeader>
                     <ChangeEmail></ChangeEmail>
+                    <ChangePassword></ChangePassword>
                 </div>
             </IonContent>
         </IonPage>
