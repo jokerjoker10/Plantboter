@@ -4,6 +4,8 @@ import { RouteComponentProps } from 'react-router';
 import api from '../../services/Api';
 import React, { useEffect } from 'react';
 import UserHeader from '../../components/user/userheader';
+import ChangeEmail from '../../components/user/changeemail';
+
 
 const User: React.FC = () => {
     return (
@@ -17,6 +19,7 @@ const User: React.FC = () => {
             <IonContent fullscreen className="background">
                 <div className="user_settings">
                     <UserHeader></UserHeader>
+                    <ChangeEmail></ChangeEmail>
                 </div>
             </IonContent>
         </IonPage>
