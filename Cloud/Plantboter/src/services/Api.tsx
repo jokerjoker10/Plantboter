@@ -30,7 +30,7 @@ axios.interceptors.response.use((response) => {
     if (refresh_token && error.response.status === 401 && !original_request._retry) {
         original_request._retry = true;
 
-        axios
+        return axios
             .post(base_url + ROUTES.AUTH.REFRESH_TOKEN, { refresh_token: refresh_token })
             .then((response) => {
                 console.log(response.status)
