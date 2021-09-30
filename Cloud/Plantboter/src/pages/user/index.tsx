@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import UserHeader from '../../components/user/userheader';
 import ChangeEmail from '../../components/user/changeemail';
 import ChangePassword from '../../components/user/changepassword';
+import DeleteUser from '../../components/user/deleteuser';
 
 const User: React.FC = () => {
     return (
@@ -21,6 +22,7 @@ const User: React.FC = () => {
                     <UserHeader></UserHeader>
                     <ChangeEmail></ChangeEmail>
                     <ChangePassword></ChangePassword>
+                    <DeleteUser></DeleteUser>
                 </div>
             </IonContent>
         </IonPage>
