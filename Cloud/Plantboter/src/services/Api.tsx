@@ -25,27 +25,25 @@ axios.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     const original_request = error.config;
-    console.log(original_request)
     let refresh_token = localStorage.getItem("refresh_token");
 
     if (refresh_token && error.response.status === 401 && !original_request._retry) {
         original_request._retry = true;
 
-        return axios
+        axios
             .post(base_url + ROUTES.AUTH.REFRESH_TOKEN, { refresh_token: refresh_token })
             .then((response) => {
+                console.log(response.status)
                 if (response.status == 200) {
                     localStorage.setItem("access_token", response.data.access_token);
+
                     console.log("Access token refreshed!");
                     return axios(original_request);
                 }
-                else {
-                    //window.location.href = "/auth/login";
-                }
+                window.location.href = "/auth/login";
             })
             .catch((error) => {
-                console.log(error);
-                //window.location.href = "/auth/login";
+                window.location.href = "/auth/login";
             })
     }
     return Promise.reject(error);
