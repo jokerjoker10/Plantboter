@@ -1,4 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonFab, IonFabButton, IonFabList, IonIcon, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { ellipsisHorizontalCircleOutline, personOutline, warningOutline } from 'ionicons/icons';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -6,15 +7,22 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>Plantboter</IonTitle>
         </IonToolbar>
+        <IonFab vertical="top" horizontal="end">
+          <IonFabButton>
+            <IonIcon icon={ellipsisHorizontalCircleOutline}></IonIcon>
+          </IonFabButton>
+          <IonFabList side="bottom">
+            <IonFabButton href="/user">
+              <IonIcon icon={personOutline}></IonIcon>
+            </IonFabButton>
+          </IonFabList>
+        </IonFab>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+      <IonContent fullscreen className="background">
+
+
       </IonContent>
     </IonPage>
   );
