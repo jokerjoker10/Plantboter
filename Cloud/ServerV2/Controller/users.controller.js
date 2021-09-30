@@ -18,6 +18,17 @@ function getUser(req, res) {
     return new Promise((resolve, reject) => {
         user_model.findOne({where: {id : req.jwt_decode.id, email: req.jwt_decode.email}})
         .then((user) => {
+            if(!user){
+                if(req.originalUrl == '/front/user/getUser'){
+                    res.status(404)
+                    .json({
+                        message: "User not found"
+                    });
+                }
+                reject("User not found");
+                return;
+            }
+
             if(req.originalUrl != '/front/user/getUser'){
                 resolve(user);
                 return;
@@ -82,30 +93,66 @@ function changePassword(password, user_id){
     })
 }
 
+// Changes E-Mail and Sends a new Verification E-Mail to the user
+// Body: email
+// Auth: Required
 function changeEmail(req, res){
-    getUserByMail(req.body.email)
+
+    //Look if email is already in use
+    user_model.findOne({where: {email: req.body.email}})
     .then((double_mail_test) => {
         if(double_mail_test == null){
-            getUser(req, res)
+
+            //get user by the jwt id 
+            user_model.findOne({where: {id : req.jwt_decode.id, email: req.jwt_decode.email}})
             .then((user) => {
-                user_model.update({email_confirmed: false, email: req.body.email}, {where : {id : user.dataValues.id}})
-                .then(() => {
-                    mailer.sendKeyMail(user, 'mail_verification')
-                    .then((mail_report) => {
-                        res.status(201).json({
-                            message: "Email Updated",
-                            email_report: mail_report
-                        });
-                        return;
+
+                //update user with new email and set the email as unconfirmed
+                //increment refresh_token_version so that the refresh token is no longer valid
+                user_model.update(
+                    {
+                        email_confirmed: false, 
+                        email: req.body.email, 
+                        refresh_token_version: user.dataValues.refresh_token_version + 1
+                    }, 
+                    {
+                        where : {
+                            id : user.dataValues.id
+                        }
+                    })
+
+                .then((new_user) => {
+                    //get user with updated data
+                    user_model.findOne({where: {id : req.jwt_decode.id}})
+                    .then((updated_user) => {
+                        console.log(updated_user)
+                        //send verification Mail
+                        mailer.sendKeyMail(updated_user, 'mail_verification')
+                        .then((mail_report) => {
+                            res.status(201).json({
+                                message: "Email Updated",
+                                email_report: mail_report
+                            });
+                            return;
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                            res.status(500)
+                            .json({
+                                message: "User updated but sending mail verification failed",
+                                error: error
+                            });
+                            return
+                        });  
                     })
                     .catch((error) => {
                         res.status(500)
                         .json({
-                            message: "User updated but sending mail verification failed",
+                            message: "Error getting updated user",
                             error: error
                         });
-                        return
-                    });  
+                        return;
+                    });
                 })
                 .catch((error) => {
                     console.log(error)
@@ -115,7 +162,7 @@ function changeEmail(req, res){
                         error: error
                     });
                     return;
-                })
+                });
                 
             })
             .catch((error) => {
