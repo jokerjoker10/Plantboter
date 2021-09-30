@@ -111,14 +111,14 @@ const RegisterComponent: React.FC<ContainerProps> = () => {
           To register to Plantboter please enter your email address and choose a passoword.
           The password must have the following criteria:
         </p>
-        <p>
-          <ul>
-            <li>one or more capital letter</li>
-            <li>one or more lower case letter</li>
-            <li>one or more of these characters: *!@$%&?/~_=|#^</li>
-            <li>the entire password must between 8 and 32 letters</li>
-          </ul>
-        </p>
+        
+        <ul>
+          <li>one or more capital letter</li>
+          <li>one or more lower case letter</li>
+          <li>one or more of these characters: *!@$%&?/~_=|#^</li>
+          <li>the entire password must between 8 and 32 letters</li>
+        </ul>
+        
       </IonCardContent>
 
       <IonCardContent>
