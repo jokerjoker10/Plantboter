@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const db = require('../Database/database');
-const users = require('./users');
+const users = require('./users.model');
 
-const controllers = db.define('controllers', {
+const Controllers = db.define('controllers', {
     id: {
         type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
@@ -13,7 +13,7 @@ const controllers = db.define('controllers', {
         allowNull: false
     },
     cycle_time: {
-        type: Sequelize.SMALLINT.UNSIGNED,
+        type: Sequelize.BIGINT.UNSIGNED,
         allowNull: false
     },
     created_at: {
@@ -26,4 +26,6 @@ const controllers = db.define('controllers', {
     underscored: true
 });
 
-controllers.belongsTo(users);
+Controllers.belongsTo(users);
+
+module.exports = Controllers;
