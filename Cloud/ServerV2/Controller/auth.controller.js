@@ -75,7 +75,8 @@ function login(req, res){
 
                 data.dataValues.password = null;
                 data.dataValues.refresh_token_version = null;
-                
+                res
+                .setHeader("x-access-token", access_token);
                 res
                 .status(200)
                 .json({
@@ -83,8 +84,7 @@ function login(req, res){
                     user: data.dataValues,
                     access_token: access_token,
                     refresh_token: refresh_token
-                })
-                .setHeader("x-access-token", access_token);
+                });
                 return;
             }
             else {
