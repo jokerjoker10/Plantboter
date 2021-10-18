@@ -18,6 +18,14 @@ app.use(cookieParser());
 app.use('/apiv1', cors(), inputCheck.checkInput, apiroute);
 app.use('/front', cors({origin: config.domains.frontend}), inputCheck.checkInput, frontroute);
 
+// healthcheck route (always gives back 200)
+app.get('/healthcheck', cors(), (req, res) => {
+    res.status(200)
+    .json({
+        message: "System running"
+    });
+});
+
 // sync database
 db.sync()
     .then(() => {
