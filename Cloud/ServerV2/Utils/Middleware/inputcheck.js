@@ -43,6 +43,18 @@ const TESTS = {
     },
     refresh_token: {
         regex: /^[\w-]*\.[\w-]*\.[\w-]*$/
+    },
+    controller_name: {
+        regex: /^[0-9a-zA-Z*!@$%&?/~_=|#^]$/
+    },
+    cycle_time: {
+        regex: /^[0-9]+$/
+    },
+    controller_id: {
+        regex: /^[0-9]+$/
+    },
+    name: {
+        regex: /[a-zA-z0-9 ]+/
     }
 }
 
