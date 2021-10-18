@@ -1,0 +1,12 @@
+.card {
+    width: 50%;
+    min-width: 300px;
+}
+
+.errorgrid {
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: center;
+}

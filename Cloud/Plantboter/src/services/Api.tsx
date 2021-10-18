@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { relative } from 'path';
 import CONFIG from '../config';
 import ROUTES from './routes/routes';
 
@@ -11,8 +12,9 @@ axios.interceptors.request.use((config) => {
         config.headers["x-access-token"] = access_token;
     }
     else {
-        if (!new RegExp("/auth/", "g").test(window.location.pathname)) {
-            window.location.href = "/auth/login";
+        if (!new RegExp("/auth", "g").test(window.location.pathname) &&
+        window.location.pathname != "/serveroffline") {
+            window.location.href = "/auth/login?redirekt=" + encodeURIComponent(window.location.pathname);
         }
     }
     return config;
@@ -87,6 +89,27 @@ const api = {
     },
     requestPasswordReset: (body: Object) => {
         return axios.post(base_url + ROUTES.MAIL.REQUEST_PASSWORD_RESET, body);
+    },
+
+    //contoller
+    controller: {
+        getControllerList: () => {
+            return axios.get(base_url + ROUTES.CONTROLLER.GET_CONTROLLER_LIST, {});
+        },
+        getControllerInfo: (body: Object) => {
+            return axios.post(base_url + ROUTES.CONTROLLER.GET_CONTROLLER, body);
+        },
+        createController: (body: Object) => {
+            return axios.post(base_url + ROUTES.CONTROLLER.ADD_CONTROLLER, body);
+        },
+        updateController: (body: Object, controller_id: number) => {
+            return axios.post(base_url + ROUTES.CONTROLLER.UPDATE_CONTROLLER + controller_id, body);
+        }
+    },
+    
+    //healthchek
+    healthCheck: () => {
+        return axios.get(base_url + ROUTES.HEALTHCHECK);
     }
 }
 
