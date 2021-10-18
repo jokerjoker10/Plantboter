@@ -17,7 +17,14 @@ const ROUTES = {
     MAIL: {
         REQUEST_MAIL_VERIFICATION: "front/mail/requestmailverification",
         REQUEST_PASSWORD_RESET: "front/mail/requestpasswordreset"
-    }
+    },
+    CONTROLLER: {
+        GET_CONTROLLER_LIST: "front/controller/",
+        GET_CONTROLLER: "front/controller/info",
+        ADD_CONTROLLER: "front/controller/create",
+        UPDATE_CONTROLLER: "front/controller/"
+    },
+    HEALTHCHECK : "healthcheck"
 }
 
 export default ROUTES;
