@@ -1,11 +1,14 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonRouterOutlet, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 import Home from './pages/Home';
 import Auth from './pages/login';
 import User from './pages/user';
 import Logout from './pages/logout';
+import Settings from './pages/settings';
+import ControllerSettings from './pages/controllersettings';
+import ServerOffline from './pages/serveroffline';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -25,20 +28,37 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import api from './services/Api';
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/"><Home /></Route>
-        
-        <Route path="/auth/:element" component={Auth}></Route>
-        <Route path="/user" component={User}></Route>
-        <Route path="/logout" component={Logout}></Route>
+const App: React.FC = () => {
+  api.healthCheck()
+  .then((response) => {
+    console.log("Server available");
+  })
+  .catch((error) => {
+    console.log(window.location.pathname)
+    if(window.location.pathname != "/serveroffline"){
+      window.location.href = "/serveroffline?redirekt=" + encodeURIComponent(window.location.pathname);
+    }
+  });
+  
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/"><Home /></Route>
 
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+          <Route path="/serveroffline" component={ServerOffline}></Route>
+          
+          <Route path="/auth/:element" component={Auth}></Route>
+          <Route path="/user" component={User}></Route>
+          <Route path="/logout" component={Logout}></Route>
+          <Route path="/settings" component={Settings}></Route>
+          <Route path="/settings/:controller" component={ControllerSettings}></Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );  
+};
 
 export default App;
