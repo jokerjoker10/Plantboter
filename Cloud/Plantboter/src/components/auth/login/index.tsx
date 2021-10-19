@@ -3,8 +3,9 @@ import { checkmarkOutline, closeOutline, warningOutline } from 'ionicons/icons';
 import './style.css';
 import api from '../../../services/Api';
 import Loading from '../../loading';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import check from '../../../services/tests';
+import { useLocation } from 'react-router';
 
 interface ContainerProps { }
 
@@ -16,12 +17,14 @@ const LoginComponent: React.FC<ContainerProps> = () => {
   const [loading, set_loading] = useState('none');
   const [display_error, set_display_error] = useState('');
 
-  function handleLogin(){
-    if(!email){
+  const [redirekt, setRedirekt] = useState('');
+
+  function handleLogin() {
+    if (!email) {
       set_display_error('Email Required');
       return;
     }
-    else if(!password){
+    else if (!password) {
       set_display_error('Password Required');
       return;
     }
@@ -31,35 +34,45 @@ const LoginComponent: React.FC<ContainerProps> = () => {
       email: email,
       password: password
     })
-    .then((response) => {
-      localStorage.setItem("access_token", response.data.access_token);
-      localStorage.setItem("refresh_token", response.data.refresh_token);
+      .then((response) => {
+        localStorage.setItem("access_token", response.data.access_token);
+        localStorage.setItem("refresh_token", response.data.refresh_token);
 
-      window.location.href = "/"
-    })
-    .catch((error) => {
-      set_loading('error');
-      if(error.response.status == 400){
-        set_display_error("Email or Password wrong");
-      }
-      else{
-        set_display_error(error.response.data.error || error.response.data.message || 'Unknown error');
-      }
-    });
+        if(redirekt != '') {
+          window.location.href = "/"
+        }
+        else {
+          window.location.href = decodeURIComponent(redirekt);
+        }
+      })
+      .catch((error) => {
+        set_loading('error');
+        if (error.response.status == 400) {
+          set_display_error("Email or Password wrong");
+        }
+        else {
+          set_display_error(error.response.data.error || error.response.data.message || 'Unknown error');
+        }
+      });
   }
 
   useIonViewDidEnter(() => {
     api.getSettings()
-    .then((settings) => {
-      set_allow_regestration(settings.data.settings.allow_regestration);
-    })
-    .catch((error) => {
-      if(error.response == undefined){
-        set_display_error('Unknown Error Connecting to server');
-        return;
-      }
-      set_display_error(error.response.data.error || error.response.data.message || 'Unknown error');
-    });
+      .then((settings) => {
+        set_allow_regestration(settings.data.settings.allow_regestration);
+      })
+      .catch((error) => {
+        if (error.response == undefined) {
+          set_display_error('Unknown Error Connecting to server');
+          return;
+        }
+        set_display_error(error.response.data.error || error.response.data.message || 'Unknown error');
+      });
+  });
+
+  const location = useLocation();
+  useEffect(() => {
+    setRedirekt(new URLSearchParams(location.search).get('redirekt') || '');
   });
 
   return (
@@ -68,7 +81,7 @@ const LoginComponent: React.FC<ContainerProps> = () => {
         <IonCardTitle>Login</IonCardTitle>
       </IonCardHeader>
 
-      <IonItem color="warning" id="error_message" style={{display: display_error != '' ? "block" : "none"}}>
+      <IonItem color="warning" id="error_message" style={{ display: display_error != '' ? "block" : "none" }}>
         <IonIcon icon={warningOutline}></IonIcon>
         <IonContent color="warning">
           {display_error}
