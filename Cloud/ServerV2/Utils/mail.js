@@ -111,7 +111,7 @@ async function sendTestMail(){
     var transporter = getTransporter();
     await transporter.sendMail({
         from: 'Plantboter 🌱 <' + config.email.auth.user + '>',
-        to: '',
+        to: 'testmail@testmail.com',
         subject: '',
         text: ''
     });
