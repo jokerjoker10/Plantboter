@@ -1,0 +1,7 @@
+.about {
+    color: rgba(95, 95, 95, 0.527);
+    z-index: 999;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

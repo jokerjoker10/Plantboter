@@ -30,6 +30,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import api from './services/Api';
 import Version from './components/version';
+import About from './components/about';
 
 const App: React.FC = () => {
   api.healthCheck()
@@ -59,6 +60,7 @@ const App: React.FC = () => {
         </IonRouterOutlet>
       </IonReactRouter>
       <Version></Version>
+      <About></About>
     </IonApp>
   );  
 };

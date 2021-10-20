@@ -5,7 +5,7 @@ interface ContainerProps { }
 
 const Version = () => {
   return (
-    <label className="version">V{gitVersion()}</label>
+    <label className="version">{gitVersion()}</label>
   );
 };
 
