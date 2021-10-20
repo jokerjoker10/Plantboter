@@ -107,6 +107,16 @@ const updateMailSendData = (mail_key, mail_report) => {
     });
 }
 
+async function sendTestMail(){
+    var transporter = getTransporter();
+    await transporter.sendMail({
+        from: 'Plantboter 🌱 <' + config.email.auth.user + '>',
+        to: '',
+        subject: '',
+        text: ''
+    });
+}
+
 async function sendMailWithKey(key, email, type){
     var transporter = getTransporter();
     //html code
@@ -147,5 +157,6 @@ function getTransporter(){
 }
 
 module.exports = {
-    sendKeyMail: sendKeyMail 
+    sendKeyMail: sendKeyMail,
+    sendTestMail: sendTestMail
 }

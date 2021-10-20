@@ -1,4 +1,4 @@
-const settings = require('../Utils/settings').getFrontendSettings()
+const settings = require('../Utils/settings').getFrontendSettings();
 const controller_model = require('../Model/controllers.model');
 const user_controller = require('../Controller/users.controller');
 

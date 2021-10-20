@@ -1,8 +1,13 @@
 const fs = require('fs');
 
+
 function getSettings() {
-    var obj = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));
-    obj.auth.token_key = obj.auth.token_key || process.env.TOKEN_KEY
+    const configPath = process.env.CONFIG_PATH || './Config';
+    var obj = JSON.parse(fs.readFileSync(configPath + "/config.json", 'utf-8'));
+    
+    obj.auth.access_token_key = process.env.ACCESS_TOKEN_KEY;
+    obj.auth.refresh_token_key = process.env.REFRESH_TOKEN_KEY;
+    
     return obj
 } 
 
