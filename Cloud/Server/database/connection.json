@@ -1,3 +1,0 @@
-{
-    "connectionstring": "mongodb://localhost:27027/Plantbotter?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"
-}
