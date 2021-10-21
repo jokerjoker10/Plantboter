@@ -2,6 +2,6 @@ Controller/Arduino/settings.h
 Cloud/Plantboter/package-lock.json
 Cloud/PlantboterServer/node_modules
 Cloud/PlantboterServer/package-lock.json
-Cloud/PlantboterServer/Config/config.json
+Cloud/PlantboterServer/Config/*
 *.vscode
 */node_modules
