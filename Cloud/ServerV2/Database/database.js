@@ -8,7 +8,8 @@ const db = new Sequelize(
     {
         host: config.database.host,
         dialect: 'mysql',
-
+        
+        logging: false,
         pool: config.database.pool
     }
 )
