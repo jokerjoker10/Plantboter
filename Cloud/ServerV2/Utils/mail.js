@@ -109,7 +109,7 @@ const updateMailSendData = (mail_key, mail_report) => {
 
 async function sendTestMail(){
     var transporter = getTransporter();
-    await transporter.sendMail({
+    return transporter.sendMail({
         from: 'Plantboter 🌱 <' + config.email.auth.user + '>',
         to: 'testmail@testmail.com',
         subject: '',
