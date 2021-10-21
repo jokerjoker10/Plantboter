@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const inputCheck = require('../Utils/Middleware/inputcheck');
+const morgan = require('morgan');
 
 const config = require('../Utils/settings').getSettings();
 const db = require('../Database/database');
@@ -10,6 +11,9 @@ const db = require('../Database/database');
 // route modules
 const apiroute = require('./api.route');
 const frontroute = require('./front.route');
+
+// traffic logger
+app.use(morgan('combined'));
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -28,14 +32,5 @@ app.get('/healthcheck', (req, res) => {
     });
     return;
 });
-
-// sync database
-db.sync()
-    .then(() => {
-        console.log('Database Syncend');
-    })
-    .catch(err => {
-        console.log('Database Sync failed: ' + err);
-    });
 
 module.exports = app;
