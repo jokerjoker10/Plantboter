@@ -1,0 +1,54 @@
+{
+    "database": {
+        "database": "",
+        "username": "",
+        "password": "",
+        "host": "",
+        "pool": {
+            "max": 5,
+            "min": 0,
+            "acquire": 30000,
+            "idle": 10000
+        }
+    },
+    "email": {
+        "host": "",
+        "port": 587,
+        "secure": false,
+        "auth": {
+            "user": "",
+            "pass": ""
+        }
+    },
+    "domains":{
+        "frontend": "",
+        "api" : ""
+    },
+    "auth": {
+        "allow_regrestration": true
+    },
+    "settings": {
+        "controller": {
+            "cycle_time": {
+                "default": 900000,
+                "min": 900000,
+                "max": 360000000,
+                "allow_change": true
+            }
+        },
+        "plants": {
+            "trigger_percentage": {
+                "default": 40,
+                "min": 0,
+                "max": 100,
+                "allow_change": true
+            },
+            "pump_time": {
+                "default": 300000,
+                "min": 1000,
+                "max": 600000,
+                "allow_change": true
+            }
+        }
+    }
+}
