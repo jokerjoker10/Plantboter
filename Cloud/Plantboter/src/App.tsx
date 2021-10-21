@@ -2,6 +2,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
+/* Pages */
 import Home from './pages/Home';
 import Auth from './pages/login';
 import User from './pages/user';
@@ -9,6 +10,10 @@ import Logout from './pages/logout';
 import Settings from './pages/settings';
 import ControllerSettings from './pages/controllersettings';
 import ServerOffline from './pages/serveroffline';
+
+/* Modules */
+import api from './services/Api';
+import Version from './components/version';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -28,9 +33,6 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import api from './services/Api';
-import Version from './components/version';
-import About from './components/about';
 
 const App: React.FC = () => {
   api.healthCheck()
@@ -60,7 +62,6 @@ const App: React.FC = () => {
         </IonRouterOutlet>
       </IonReactRouter>
       <Version></Version>
-      <About></About>
     </IonApp>
   );  
 };
