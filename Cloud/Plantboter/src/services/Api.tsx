@@ -28,7 +28,6 @@ axios.interceptors.response.use((response) => {
 }, (error) => {
     const original_request = error.config;
     let refresh_token = localStorage.getItem("refresh_token");
-
     if (refresh_token && error.response.status === 401 && !original_request._retry) {
         original_request._retry = true;
 
@@ -96,17 +95,30 @@ const api = {
         getControllerList: () => {
             return axios.get(base_url + ROUTES.CONTROLLER.GET_CONTROLLER_LIST, {});
         },
-        getControllerInfo: (body: Object) => {
-            return axios.post(base_url + ROUTES.CONTROLLER.GET_CONTROLLER, body);
+        getControllerInfo: (controller_id: Number) => {
+            return axios.get(base_url + ROUTES.CONTROLLER.GET_CONTROLLER + '/' + controller_id);
         },
         createController: (body: Object) => {
             return axios.post(base_url + ROUTES.CONTROLLER.ADD_CONTROLLER, body);
         },
-        updateController: (body: Object, controller_id: number) => {
+        updateController: (body: Object, controller_id: Number) => {
             return axios.post(base_url + ROUTES.CONTROLLER.UPDATE_CONTROLLER + controller_id, body);
         }
     },
     
+    //plants
+    plants: {
+        getPlantsOfController: (controller_id: Number) => {
+            return axios.get(base_url + ROUTES.PLANT.GET_PLANTS_OF_CONTROLLER + '/' + controller_id);
+        },
+        createPlant: (body: Object) => {
+            return axios.post(base_url + ROUTES.PLANT.CREATE_PLANT, body);
+        },
+        getPlantInfo: (id: Number) => {
+            return axios.get(base_url + ROUTES.PLANT.GET_PLANT_INFO + '/' + id);
+        }
+    },
+
     //healthchek
     healthCheck: () => {
         return axios.get(base_url + ROUTES.HEALTHCHECK);

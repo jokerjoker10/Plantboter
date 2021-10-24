@@ -24,6 +24,11 @@ const ROUTES = {
         ADD_CONTROLLER: "front/controller/create",
         UPDATE_CONTROLLER: "front/controller/"
     },
+    PLANT: {
+        GET_PLANTS_OF_CONTROLLER: "front/plant/plantsofcontroller",
+        GET_PLANT_INFO: "front/plant",
+        CREATE_PLANT: "front/plant",
+    },
     HEALTHCHECK : "healthcheck"
 }
 
