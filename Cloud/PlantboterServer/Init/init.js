@@ -47,21 +47,9 @@ const initServer = () => {
                     db.authenticate()
                         .then(() => {
                             console.log(icons.success);
-
-                            process.stdout.write('Database Sync: ');
-                            // sync database
-                            db.sync()
-                            .then(() => {
-                                console.log(icons.success);
-                                console.log('##### Initializing done! #####');
-                                console.log(message);
-                                resolve();
-                            })
-                            .catch(err => {
-                                console.log(icons.error)
-                                reject('Database Sync failed: ' + err);
-                                return;
-                            });
+                            console.log('##### Initializing done! #####');
+                            console.log(message);
+                            resolve();
                         })
                         .catch(err => {
                             console.log(icons.error)
