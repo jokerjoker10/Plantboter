@@ -75,7 +75,7 @@ function verifyEmail(req, res){
                 res.status(500)
                 .json({
                     message: "Activating mail failed",
-                    error: error
+                    error: error.toString()
                 });
                 return;
             });            
@@ -84,7 +84,7 @@ function verifyEmail(req, res){
             res.status(500)
             .json({
                 message: "Finding Code Failed",
-                error: error
+                error: error.toString()
             });
             return;
         });
@@ -167,7 +167,7 @@ function resetPassword(req, res){
                 res.status(500)
                 .json({
                     message: "Saving new Password failed",
-                    error: error
+                    error: error.toString()
                 });
                 return;
             });
@@ -177,7 +177,7 @@ function resetPassword(req, res){
             res.status(500)
             .json({
                 message: "Finding Code Failed",
-                error: error
+                error: error.toString()
             });
             return;
         });
@@ -186,7 +186,7 @@ function resetPassword(req, res){
         res.status(400)
         .json({
             message: "User not found",
-            error: error
+            error: error.toString()
         })
     });
 }
@@ -204,7 +204,7 @@ function sendMailVerification(req, res){
             res.status(500)
             .json({
                 message: "Error sending verification mail",
-                error: error
+                error: error.toString()
             });
             return;
         });
@@ -249,7 +249,7 @@ function sendPasswordResetMail(req, res){
             res.status(500)
             .json({
                 message: "Error sending verification mail",
-                error: error
+                error: error.toString()
             });
             return;
         });

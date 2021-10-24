@@ -47,7 +47,7 @@ function getUser(req, res) {
                 res.status(404)
                 .json({
                     message: "User not found",
-                    error: error
+                    error: error.toString()
                 });
             }
             reject(error);
@@ -140,7 +140,7 @@ function changeEmail(req, res){
                             res.status(500)
                             .json({
                                 message: "User updated but sending mail verification failed",
-                                error: error
+                                error: error.toString()
                             });
                             return
                         });  
@@ -149,7 +149,7 @@ function changeEmail(req, res){
                         res.status(500)
                         .json({
                             message: "Error getting updated user",
-                            error: error
+                            error: error.toString()
                         });
                         return;
                     });
@@ -159,7 +159,7 @@ function changeEmail(req, res){
                     res.status(500)
                     .json({
                         message: "Error updating user",
-                        error: error
+                        error: error.toString()
                     });
                     return;
                 });
@@ -169,7 +169,7 @@ function changeEmail(req, res){
                 res.status(500)
                 .json({
                     message: "Error getting user",
-                    error: error
+                    error: error.toString()
                 });
                 return;
             });
