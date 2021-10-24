@@ -179,14 +179,14 @@ function signup(req, res){
                     res.status(500)
                     .json({
                         message: "User created but sending mail verification failed",
-                        error: error
+                        error: error.toString()
                     });
                 });            
             })
             .catch((error) => {
                 res.status(500).json({
                     message: "Saving to Database failed",
-                    error: error
+                    error: error.toString()
                 });
                 return;
             });
