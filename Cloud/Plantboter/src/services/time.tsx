@@ -25,6 +25,15 @@ function timeToString(time: number): string{
     return output;
 }
 
+function dateToString(date: Date): string{
+    var tmp_date = new Date(date);
+    var monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+
+    return ' ' + tmp_date.getDay().toString() + ' ' + monthNames[tmp_date.getMonth()] + ' ' + tmp_date.getFullYear();
+}
+
 export default {
-    timeToString: timeToString
+    timeToString: timeToString,
+    dateToString: dateToString
 }
