@@ -29,6 +29,7 @@
     },
     "settings": {
         "controller": {
+            "default_name": "New Controller",
             "cycle_time": {
                 "default": 900000,
                 "min": 900000,
@@ -37,6 +38,10 @@
             }
         },
         "plants": {
+            "default_name": "New Plant", 
+            "default_sensor_pin": 0,
+            "default_pump_pin": 0,
+            "default_sensor_type": "analog",
             "trigger_percentage": {
                 "default": 40,
                 "min": 0,
