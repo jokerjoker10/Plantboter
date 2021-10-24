@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../Database/database');
 const controllers = require('./controllers.model');
 
-const plants = db.define('plants', {
+const plants = db.define('plant', {
     id: {
         type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
@@ -38,3 +38,5 @@ const plants = db.define('plants', {
 });
 
 plants.belongsTo(controllers);
+
+module.exports = plants;
