@@ -4,5 +4,7 @@ export interface ControllerModel{
     cycle_time: Number,
     created_at: Date,
     updated_at: Date,
-    user_id: Number
+    user_id: Number,
+    createdAt: Date,
+    updatedAt: Date
 }
