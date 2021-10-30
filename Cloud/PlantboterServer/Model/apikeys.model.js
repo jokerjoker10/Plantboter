@@ -18,10 +18,9 @@ const apikeys = db.define('apiKeys', {
         allowNull: false,
         defaultValue: true
     },
-    created_at: {
+    expire_at: {
         type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        allowNull: true,
     }
 },
 {
@@ -29,3 +28,5 @@ const apikeys = db.define('apiKeys', {
 });
 
 apikeys.belongsTo(controllers);
+
+module.exports = apikeys;
