@@ -3,9 +3,10 @@ const plant_model = require('../Model/plants.model');
 const controller_model = require('../Model/controllers.model');
 const user_controller = require('../Controller/users.controller');
 
+// page index and definition for export
 const plantController = {
-    createPlant: createPlant,
     getPlantInfo: getPlantInfo,
+    createPlant: createPlant,
     getPlantsFromController: getPlantsFromController,
 }
 
