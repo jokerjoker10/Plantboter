@@ -27,6 +27,6 @@ const comparePassword = (plainpass, hashword) => {
 };
 
 module.exports = {
-    cryptPassword,
-    comparePassword
+    cryptPassword : cryptPassword,
+    comparePassword : comparePassword
 }
