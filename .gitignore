@@ -5,3 +5,4 @@ Cloud/PlantboterServer/package-lock.json
 Cloud/PlantboterServer/Config/*
 *.vscode
 */node_modules
+Cloud/PlantboterServer/Config/config.json
