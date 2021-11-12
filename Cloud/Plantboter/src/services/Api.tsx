@@ -1,5 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { relative } from 'path';
+import { useHistory } from 'react-router';
 import CONFIG from '../config';
 import ROUTES from './routes/routes';
 
@@ -27,6 +28,7 @@ axios.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     const original_request = error.config;
+    
     let refresh_token = localStorage.getItem("refresh_token");
     if (refresh_token && error.response.status === 401 && !original_request._retry) {
         original_request._retry = true;
@@ -34,7 +36,6 @@ axios.interceptors.response.use((response) => {
         return axios
             .post(base_url + ROUTES.AUTH.REFRESH_TOKEN, { refresh_token: refresh_token })
             .then((response) => {
-                console.log(response.status)
                 if (response.status == 200) {
                     localStorage.setItem("access_token", response.data.access_token);
 
@@ -46,6 +47,12 @@ axios.interceptors.response.use((response) => {
             .catch((error) => {
                 window.location.href = "/auth/login";
             })
+    }
+    var _error = error;
+    _error.config.headers["x-access-token"] = null
+
+    if(window.location.pathname != "/error"){
+        window.location.href = "/error?redirekt=" + encodeURIComponent(window.location.href.toString()) + "&error=" + encodeURIComponent(JSON.stringify(_error));
     }
     return Promise.reject(error);
 });
