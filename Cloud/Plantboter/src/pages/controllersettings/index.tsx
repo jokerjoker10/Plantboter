@@ -1,10 +1,8 @@
-import { IonMenu, IonCard, IonContent, IonHeader, IonButtons, IonPage, IonTitle, IonToolbar, IonCardContent, IonList, IonItem, IonRouterOutlet, IonCardSubtitle, IonCardTitle, IonImg, useIonViewDidEnter, useIonLoading, IonMenuButton, IonMenuToggle, useIonModal, IonBackButton, IonCardHeader, IonRange, IonLabel, IonButton, IonInput, IonIcon, IonGrid, IonRow, IonCol, useIonPopover, IonSelect, IonSelectOption, IonToggle } from '@ionic/react';
+import { IonCard, IonContent, IonButtons, IonPage, IonTitle, IonToolbar, IonCardContent, IonList, IonItem, IonCardTitle, useIonViewDidEnter, IonBackButton, IonCardHeader, IonRange, IonLabel, IonButton, IonInput, IonIcon, IonGrid, IonRow, IonCol, useIonPopover, IonSelect, IonSelectOption } from '@ionic/react';
 import './style.css';
 import api from '../../services/Api';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { AxiosError } from 'axios';
-import ErrorModal from '../../components/errormodal';
 import { ControllerModel } from '../../model/controller.model';
 import { SettingsModel } from '../../model/settings.model';
 import timeService from '../../services/time';
@@ -18,23 +16,7 @@ interface ControllerSettingsProps extends RouteComponentProps<{
     controller: string;
 }> { }
 
-const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {
-
-    // error Handling
-    const [error, set_error] = useState<AxiosError>();
-    const [present_error, dismiss_error] = useIonModal(ErrorModal, {
-        error,
-        onDismissError: onDismissError
-    });
-    function onDismissError() {
-        dismiss_error();
-    }
-    function setError(error: AxiosError) {
-        set_error(error);
-        present_error();
-    }
-
-    // action popover
+const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {    // action popover
     const [showPopover, dismissPopover] = useIonPopover(ControllerSettingsPopover, { onHide: () => dismissPopover() });
 
     //Controller Save
@@ -48,7 +30,7 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {
             })
             .catch((error) => {
                 setControllerSaveLoading('error');
-                setError(error);
+                console.log(error);
             });
     }
 
@@ -63,7 +45,7 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {
                 setSettings(response.data.settings);
             })
             .catch((error) => {
-                setError(error);
+                console.log(error);
             });
 
         getControllerData();
@@ -79,7 +61,7 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {
                 loadPlantList(response.data.controller);
             })
             .catch((error) => {
-                setError(error);
+                console.log(error);
             });
     }
 
@@ -90,7 +72,7 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {
                 setPlantList(plants.data.plants);
             })
             .catch((error) => {
-                setError(error);
+                console.log(error);
             });
     }
 
@@ -104,7 +86,7 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {
             })
             .catch((error) => {
                 setAddPlantLoading('error');
-                setError(error);
+                console.log(error);
             });
     }
 
@@ -118,7 +100,7 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {
                 setShowPlantSettings(true);
             })
             .catch((error) => {
-                setError(error);
+                console.log(error);
             })
     }
 

@@ -7,7 +7,6 @@ import Loading from '../../loading';
 import { ControllerListModel } from '../../../model/controllerlist.model';
 import { PlantListModel } from '../../../model/plantlist.model';
 import { AxiosError } from 'axios';
-import ErrorModal from '../../errormodal';
 import { Component } from 'ionicons/dist/types/stencil-public-runtime';
 
 interface ControllerCardProps {
@@ -15,19 +14,6 @@ interface ControllerCardProps {
 }
 
 const ControllerCard: React.FC<ControllerCardProps> = ({ controller }) => {
-    const [error, set_error] = useState<AxiosError>();
-    const [present_error, dismiss_error] = useIonModal(ErrorModal, {
-        error,
-        onDismissError: onDismissError
-    });
-    function onDismissError() {
-        dismiss_error();
-    }
-    function setError(error: AxiosError) {
-        set_error(error);
-        present_error();
-    }
-
     const [more_plants, setMorePlants] = useState(false);
     const [plant_list, setPlantList] = useState<Array<PlantListModel>>();
     function getPlantList() {
@@ -40,7 +26,7 @@ const ControllerCard: React.FC<ControllerCardProps> = ({ controller }) => {
                 }
             })
             .catch((error) => {
-                setError(error);
+                console.log(error);
             });
     }
 

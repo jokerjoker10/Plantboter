@@ -6,23 +6,9 @@ import React, { useState } from 'react';
 import ControllerCard from '../../components/settings/controllercard';
 import { ControllerModel } from '../../model/controller.model';
 import { AxiosError } from 'axios';
-import ErrorModal from '../../components/errormodal';
 
 const Settings: React.FC = () => {
     const [controller_list, set_controller_list] = useState<Array<ControllerModel>>()
-
-    const [error, set_error] = useState<AxiosError>();
-    const [present_error, dismiss_error] = useIonModal(ErrorModal, {
-        error,
-        onDismissError: onDismissError
-    });
-    function onDismissError() {
-        dismiss_error();
-    }
-    function setError(error: AxiosError) {
-        set_error(error);
-        present_error();
-    }
 
     useIonViewDidEnter(() => {
         getController();
@@ -34,7 +20,7 @@ const Settings: React.FC = () => {
             set_controller_list(response.data.controller_list);
         })
         .catch((error) => {
-            setError(error);
+            console.log(error);
         });
     }
 
@@ -44,7 +30,7 @@ const Settings: React.FC = () => {
                 getController();
             })
             .catch((error) => {
-                setError(error);
+                console.log(error);
             });
     }
     return (
