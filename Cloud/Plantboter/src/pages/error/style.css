@@ -1,0 +1,8 @@
+pre {
+    max-height:80%;
+}
+
+.codecard{
+    max-height:80%;
+    overflow: scroll;
+}
