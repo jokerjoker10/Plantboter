@@ -56,8 +56,6 @@ const RegisterComponent: React.FC<ContainerProps> = () => {
     })
     .then((response) => {
       set_loading('success');
-      console.log("User Logged in");
-      console.log(response.data)
       window.location.href = "auth/verifymail?m=" + email;
     })
     .catch((error) => {

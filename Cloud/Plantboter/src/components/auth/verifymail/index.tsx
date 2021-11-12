@@ -63,8 +63,6 @@ const VerifyMailComponent: React.FC<ContainerProps> = () => {
         })
         .then((response) => {
             set_loading_status('success');
-            console.log("User Logged in");
-            console.log(response.data)
             window.location.href = "auth/login"
         })
         .catch((error) => {
@@ -87,7 +85,6 @@ const VerifyMailComponent: React.FC<ContainerProps> = () => {
         }
 
         set_resend_loading_status('loading');
-        console.log(resend_mail)
 
         api.requestMailVerification({
             email: resend_mail

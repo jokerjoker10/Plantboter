@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Link, Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
@@ -10,6 +10,7 @@ import Logout from './pages/logout';
 import Settings from './pages/settings';
 import ControllerSettings from './pages/controllersettings';
 import ServerOffline from './pages/serveroffline';
+import ErrorPage from './pages/error';
 
 /* Modules */
 import api from './services/Api';
@@ -36,11 +37,8 @@ import './theme/variables.css';
 
 const App: React.FC = () => {
   api.healthCheck()
-  .then((response) => {
-    console.log("Server available");
-  })
+  .then((response) => {})
   .catch((error) => {
-    console.log(window.location.pathname)
     if(window.location.pathname != "/serveroffline"){
       window.location.href = "/serveroffline?redirekt=" + encodeURIComponent(window.location.pathname);
     }
@@ -59,6 +57,7 @@ const App: React.FC = () => {
           <Route path="/logout" component={Logout}></Route>
           <Route path="/settings" component={Settings}></Route>
           <Route path="/settings/:controller" component={ControllerSettings}></Route>
+          <Route path="/error" component={ErrorPage} ></Route>
         </IonRouterOutlet>
       </IonReactRouter>
       <Version></Version>

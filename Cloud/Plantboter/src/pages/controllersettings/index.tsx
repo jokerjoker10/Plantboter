@@ -116,7 +116,6 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {
             .then((plant) => {
                 setPlant(plant.data.plant);
                 setShowPlantSettings(true);
-                console.log(plant)
             })
             .catch((error) => {
                 setError(error);
