@@ -1,12 +1,12 @@
 import { IonCard, IonContent, IonButtons, IonPage, IonTitle, IonToolbar, IonCardContent, IonList, IonItem, IonCardTitle, useIonViewDidEnter, IonBackButton, IonCardHeader, IonRange, IonLabel, IonButton, IonInput, IonIcon, IonGrid, IonRow, IonCol, useIonPopover, IonSelect, IonSelectOption } from '@ionic/react';
 import './style.css';
 import api from '../../services/Api';
-import React, { useState } from 'react';
-import { RouteComponentProps } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { RouteComponentProps, useLocation } from 'react-router';
 import { ControllerModel } from '../../model/controller.model';
 import { SettingsModel } from '../../model/settings.model';
 import timeService from '../../services/time';
-import { ellipsisVerticalOutline, saveOutline } from 'ionicons/icons';
+import { ellipsisVerticalOutline, saveOutline, trashBinOutline } from 'ionicons/icons';
 import ControllerSettingsPopover from '../../components/settings/contollersettingspopover';
 import Loading from '../../components/loading';
 import { PlantListModel } from '../../model/plantlist.model';
@@ -17,8 +17,6 @@ interface ControllerSettingsProps extends RouteComponentProps<{
 }> { }
 
 const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {    // action popover
-    const [showPopover, dismissPopover] = useIonPopover(ControllerSettingsPopover, { onHide: () => dismissPopover() });
-
     //Controller Save
     const [controllerSaveLoading, setControllerSaveLoading] = useState('none');
     function handleSaveController() {
@@ -51,6 +49,8 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {  
         getControllerData();
 
     }, []);
+
+    const [showPopover, dismissPopover] = useIonPopover(ControllerSettingsPopover, { onHide: () => dismissPopover(), controller_id: controller?.id });
 
     function getControllerData() {
         api.controller.getControllerInfo(Number(match.params.controller))
@@ -90,7 +90,7 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {  
             });
     }
 
-
+    // load plant
     const [show_plant_settings, setShowPlantSettings] = useState(false);
     const [plant, setPlant] = useState<PlantModel>();
     function loadPlantSettings(id: Number) {
@@ -98,16 +98,85 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {  
             .then((plant) => {
                 setPlant(plant.data.plant);
                 setShowPlantSettings(true);
+                
+                setPlantName(plant.data.plant.name);
+                setPlantSensorType(plant.data.plant.sensor_type);
+                setPlantSensorPin(plant.data.plant.sensor_pin);
+                setPlantTriggerPercentage(plant.data.plant.trigger_percentage);
+                setPlantPumpPin(plant.data.plant.pump_pin);
+                setPlantPumpTime(plant.data.plant.pump_time);
+
+                var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?plant=' + id;
+                window.history.pushState({path:newurl},'',newurl);
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     }
 
-    function changeType(type: String) {
-        var tmp_plant = plant;
-        tmp_plant!.sensor_type = type;
-        setPlant(tmp_plant);
+    // save plant
+    const [plant_name, setPlantName] = useState<String>()
+    const [plant_sensor_type, setPlantSensorType] = useState<String>();
+    const [plant_sensor_pin, setPlantSensorPin] = useState<Number>();
+    const [plant_trigger_percentage, setPlantTriggerPercentage] = useState<Number>();
+    const [plant_pump_pin, setPlantPumpPin] = useState<Number>();
+    const [plant_pump_time, setPlantPumpTime] = useState<Number>();
+
+    const [update_plant_loading, setUpdatePlantLoading] = useState<String>("none");
+
+    function savePlant(){
+        setUpdatePlantLoading("loading");
+        var data = {
+            plant_id: plant?.id,
+            name: plant_name,
+            sensor_pin: plant_sensor_pin,
+            pump_pin: plant_pump_pin,
+            trigger_percentage: plant_trigger_percentage,
+            sensor_type: plant_sensor_type,
+            pump_time: plant_pump_time
+        }
+
+        var defaults = settings?.settings.plants;
+
+        if (!data.name) {
+            data.name = String(defaults?.default_name);
+        }
+        if (!data.sensor_pin) {
+            data.sensor_pin = defaults?.default_sensor_pin
+        }
+        if (!data.pump_pin) {
+            data.pump_pin = defaults?.default_pump_pin
+        }
+        if (!data.trigger_percentage || data.trigger_percentage < defaults?.trigger_percentage.min! || data.trigger_percentage > defaults?.trigger_percentage.max!) {
+            data.trigger_percentage = defaults?.trigger_percentage.default;
+        }
+        if (!data.pump_time || data.pump_time < defaults?.pump_time.min! || data.pump_time > defaults?.pump_time.max!) {
+            data.pump_time = defaults?.pump_time.default;
+        }
+        if (!data.sensor_type || data.sensor_type != ("digital" || "analog")) {
+            data.sensor_type = String(defaults?.default_sensor_type);
+        }
+        
+        api.plants.updatePlant(data)
+        .then((response) => {
+            setUpdatePlantLoading("success");
+            loadPlantSettings(data.plant_id!);
+        })
+        .catch((error) => {
+            setUpdatePlantLoading("error");
+            console.log(error);
+        })
+    }
+
+    // load plant throug query parameter
+    const location = useLocation();
+    const [query_plant, setQueryPlant] = useState<any>(null);
+    useEffect(() => {
+        setQueryPlant(new URLSearchParams(location.search).get('plant') || null);
+    }, []);
+
+    if(query_plant != null && !plant){
+        loadPlantSettings(Number(query_plant));
     }
 
     return (
@@ -129,7 +198,7 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {  
                         <IonCardTitle>{name}</IonCardTitle>
                     </IonCardHeader>
                     <IonCardContent>
-                        <p>Plant UID: {controller?.id}</p>
+                        <p>Controller UID: {controller?.id}</p>
                         <p>Created at: {timeService.dateToString(controller?.createdAt!)}</p>
                         <p>Last update at: {timeService.dateToString(controller?.updatedAt!)}</p>
                     </IonCardContent>
@@ -145,8 +214,8 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {  
                         <IonItem>
                             <IonLabel>Cycle Time: {timeService.timeToString(cycle_time!)}</IonLabel>
                             <IonRange
-                                min={settings?.settings.controller.cycle_time.min}
-                                max={settings?.settings.controller.cycle_time.max}
+                                min={Number(settings?.settings.controller.cycle_time.min)}
+                                max={Number(settings?.settings.controller.cycle_time.max)}
                                 value={cycle_time}
                                 step={60000}
                                 onIonChange={e => setCycleTime(Number(e.detail.value))}>
@@ -181,52 +250,75 @@ const ControllerSettings: React.FC<ControllerSettingsProps> = ({ match }) => {  
                             {show_plant_settings ? (
                                 <IonCard>
                                     <IonCardHeader>
-                                        <IonCardTitle>{plant?.name}</IonCardTitle>
+                                        <IonCardTitle>{plant_name}</IonCardTitle>
                                     </IonCardHeader>
                                     <IonCardContent>
-                                        <IonItem>
-                                            <IonLabel position="floating">Name</IonLabel>
-                                            <IonInput value={String(plant?.name) || ''}></IonInput>
-                                        </IonItem>
+                                        <IonButton onClick={e => savePlant()}>
+                                            <IonIcon icon={saveOutline}></IonIcon>
+                                            Save
+                                            <Loading slot="end" status={update_plant_loading}></Loading>
+                                        </IonButton>
+                                        <IonButton color="danger">
+                                            <IonIcon icon={trashBinOutline}></IonIcon>
+                                            Delete : TODO
+                                            <Loading slot="end" status={controllerSaveLoading}></Loading>
+                                        </IonButton>
+                                    </IonCardContent>
+                                    <IonCardContent>
                                         <p>Plant UID: {plant?.id}</p>
                                         <p>Created at: {timeService.dateToString(plant?.createdAt!)}</p>
                                         <p>Last Update at: {timeService.dateToString(plant?.updatedAt!)}</p>
                                     </IonCardContent>
                                     <IonCardContent>
                                         <IonItem>
+                                            <IonLabel position="floating">Name</IonLabel>
+                                            <IonInput value={String(plant_name!)} onIonChange={e => setPlantName(e.detail.value!)}></IonInput>
+                                        </IonItem>
+                                    </IonCardContent>
+                                    <IonCardContent>
+                                        <IonItem>
                                             <IonLabel position="floating">Sensor Type</IonLabel>
-                                            <IonSelect value={plant?.sensor_type} onIonChange={e => changeType(e.detail.value)}>
+                                            <IonSelect value={plant_sensor_type} onIonChange={e => setPlantSensorType(e.detail.value)}>
                                                 <IonSelectOption value="analog">Analog</IonSelectOption>
                                                 <IonSelectOption value="digital">Digital</IonSelectOption>
                                             </IonSelect>
                                         </IonItem>
                                         <IonItem>
                                             <IonLabel position="floating">Sensor Pin</IonLabel>
-                                            <IonInput value={Number(plant?.sensor_pin)} type="number" step="1"></IonInput>
+                                            <IonInput value={Number(plant_sensor_pin)} type="number" step="1" onIonChange={e => setPlantSensorPin(Number(e.detail.value))}></IonInput>
                                         </IonItem>
                                         <IonItem>
-                                            <IonLabel position="floating">Trigger Percentage</IonLabel>
+                                            
+                                            <IonLabel position="floating">
+                                                Trigger Percentage: {plant_trigger_percentage}%
+                                            </IonLabel>
                                             <IonRange
-                                                min={settings?.settings.plants.trigger_percentage.min}
-                                                max={settings?.settings.plants.trigger_percentage.max}
-                                                value={Number(plant?.trigger_percentage)}
-                                                step={1}>
+                                                min={Number(settings?.settings.plants.trigger_percentage.min)}
+                                                max={Number(settings?.settings.plants.trigger_percentage.max)}
+                                                value={Number(plant_trigger_percentage)}
+                                                step={1}
+                                                disabled={plant_sensor_type == "digital"}
+                                                onIonChange={e => setPlantTriggerPercentage(Number(e.detail.value!))}>
                                             </IonRange>
-                                            <p slot="end">{plant?.trigger_percentage}</p>
+                                            
                                         </IonItem>
                                         <IonItem>
                                             <IonLabel position="floating">Pump Pin</IonLabel>
-                                            <IonInput value={Number(plant?.pump_pin)} type="number" step="1"></IonInput>
+                                            <IonInput value={Number(plant_pump_pin)} type="number" step="1" onIonChange={e => setPlantPumpPin(Number(e.detail.value!))}></IonInput>
                                         </IonItem>
                                         <IonItem>
-                                            <IonLabel position="floating">Pump Time</IonLabel>
+
+                                            <IonLabel position="floating">
+                                                Pump Time: {timeService.timeToString(Number(plant_pump_time))}
+                                            </IonLabel>
                                             <IonRange
-                                                min={settings?.settings.plants.pump_time.min}
-                                                max={settings?.settings.plants.pump_time.max}
-                                                value={Number(plant?.pump_time)}
-                                                step={1}>
+                                                min={Number(settings?.settings.plants.pump_time.min)}
+                                                max={Number(settings?.settings.plants.pump_time.max)}
+                                                value={Number(plant_pump_time)}
+                                                step={1}
+                                                onIonChange={e => setPlantPumpTime(Number(e.detail.value!))}>
                                             </IonRange>
-                                            <p slot="end">{timeService.timeToString(Number(plant?.pump_time))}</p>
+
                                         </IonItem>
                                     </IonCardContent>
                                 </IonCard>

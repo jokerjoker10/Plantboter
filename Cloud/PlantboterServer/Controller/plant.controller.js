@@ -8,6 +8,7 @@ const plantController = {
     getPlantInfo: getPlantInfo,
     createPlant: createPlant,
     getPlantsFromController: getPlantsFromController,
+    updatePlant: updatePlant,
 }
 
 function getPlantInfo(req, res) {
@@ -29,19 +30,21 @@ function getPlantInfo(req, res) {
                         .then((controller) => {
                             // check if authorized to access
                             if (controller.dataValues.userId != user.dataValues.id) {
+                                console.log("Unauthorized to access ressource")
                                 res.status(403)
                                     .json({
                                         message: 'Unauthorized to access ressource'
                                     });
                                 return;
                             }
-
-                            res.status(200)
-                                .json({
-                                    message: 'Plant found',
-                                    plant: plant
-                                });
-                            return;
+                            else{
+                                res.status(200)
+                                    .json({
+                                        message: 'Plant found',
+                                        plant: plant
+                                    });
+                                return;
+                            }
                         })
                         .catch((error) => {
                             res.status(500)
@@ -166,10 +169,10 @@ function getPlantsFromController(req, res) {
             });
         return;
     }
-    console.log(controller_id);
+    
     user_controller.getUser(req, res)
         .then((user) => {
-            plant_model.findAll({ attributes: ['id', 'name'], where: { controller_id: controller_id } })
+            plant_model.findAll({ attributes: ['id', 'name'], where: { controller_id: controller_id} })
                 .then((plants) => {
                     res.status(200)
                         .json({
@@ -177,13 +180,12 @@ function getPlantsFromController(req, res) {
                             plants: plants
                         });
 
-                    console.log(plants);
                     return;
                 })
                 .catch((error) => {
                     res.status(500)
                         .json({
-                            message: 'User not found',
+                            message: 'Plant not found',
                             error: error.toString()
                         });
                     return;
@@ -197,6 +199,106 @@ function getPlantsFromController(req, res) {
                 });
             return;
         });
+}
+
+function updatePlant(req, res){
+    var defaults = settings.settings.plants;
+    var plant_id = req.body.plant_id;
+    var data = {
+        name: req.body.name,
+        sensor_pin: req.body.sensor_pin,
+        pump_pin: req.body.pump_pin,
+        trigger_percentage: req.body.trigger_percentage,
+        sensor_type: req.body.sensor_type,
+        pump_time: req.body.pump_time
+    }
+
+    if (!plant_id) {
+        res.status(400)
+            .json({
+                message: 'Error: plant_id required'
+            });
+        return;
+    }
+    if (!data.name) {
+        data.name = defaults.default_name;
+    }
+    if (!data.sensor_pin) {
+        data.sensor_pin = defaults.default_sensor_pin
+    }
+    if (!data.pump_pin) {
+        data.pump_pin = defaults.default_pump_pin
+    }
+    if (!data.trigger_percentage || data.trigger_percentage < defaults.trigger_percentage.min || data.trigger_percentage > defaults.trigger_percentage.max) {
+        data.trigger_percentage = defaults.trigger_percentage.default;
+    }
+    if (!data.pump_time || data.pump_time < defaults.pump_time.min || data.pump_time > defaults.pump_time.max) {
+        data.pump_time = defaults.pump_time.default;
+    }
+    if (!data.sensor_type || data.sensor_type != ("digital" || "analog")) {
+        data.sensor_type = defaults.default_sensor_type;
+    }
+
+    user_controller.getUser(req,res)
+    .then((user) => {
+        plant_model.findOne({where: {id: plant_id}})
+        .then((plant) => {
+            controller_model.findOne({where: {id: plant.dataValues.controllerId}})
+            .then((controller) => {
+                if(controller.dataValues.userId == user.dataValues.id){
+                    plant_model.update(data, {where: {id: plant_id}})
+                    .then((updated_plant) => {
+                        res.status(200)
+                        .json({
+                            message: 'Plant Updated',
+                            plant: updated_plant
+                        });
+                        return;
+                    })
+                    .catch((error) => {
+                        res.status(500)
+                        .json({
+                            message: 'Updating Controller Failed',
+                            error: error.toString()
+                        });
+                        return;
+                    });
+                }
+                else{
+                    res.status(400)
+                    .json({
+                        message: 'You are not allowed to access ressource',
+                        error: error.toString()
+                    });
+                return; 
+                }
+            })
+            .catch((error) => {
+                res.status(500)
+                    .json({
+                        message: 'Controller not found',
+                        error: error.toString()
+                    });
+                return;
+            });
+        })
+        .catch((error) => {
+            res.status(500)
+                .json({
+                    message: 'Plant not found',
+                    error: error.toString()
+                });
+            return;
+        });
+    })
+    .catch((error) => {
+        res.status(500)
+            .json({
+                message: 'User not found',
+                error: error.toString()
+            });
+        return;
+    });
 }
 
 module.exports = plantController;
