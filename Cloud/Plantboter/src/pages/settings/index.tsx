@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import ControllerCard from '../../components/settings/controllercard';
 import { ControllerModel } from '../../model/controller.model';
 import { AxiosError } from 'axios';
+import controllerCreationModal from '../../components/settings/createcontrollermodal';
 
 const Settings: React.FC = () => {
     const [controller_list, set_controller_list] = useState<Array<ControllerModel>>()
@@ -24,15 +25,10 @@ const Settings: React.FC = () => {
         });
     }
 
-    function addController() {
-        api.controller.createController({})
-            .then((response) => {
-                getController();
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+    const [showAddControllerModal, dismissAddControllerModal] = useIonModal(controllerCreationModal, {
+        onDismiss: () => dismissAddControllerModal()
+    })
+
     return (
         <IonPage>
             <IonHeader>
@@ -43,7 +39,7 @@ const Settings: React.FC = () => {
                     </IonButtons>
                 </IonToolbar>
                 <IonFab vertical="top" horizontal="end">
-                    <IonFabButton onClick={e => addController()}>
+                    <IonFabButton onClick={e => showAddControllerModal()}>
                         <IonIcon icon={addOutline}></IonIcon>
                     </IonFabButton>
                 </IonFab>
