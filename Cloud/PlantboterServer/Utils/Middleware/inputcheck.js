@@ -48,14 +48,37 @@ const TESTS = {
         regex: /^[0-9a-zA-Z*!@$%&?/~_=|#^]$/
     },
     cycle_time: {
-        regex: /^[0-9]+$/
+        regex: /^[0-9]+$/,
+        aliases:[
+            "pump_time"
+        ]
     },
-    controller_id: {
-        regex: /^[0-9]+$/
+    id: {
+        regex: /^[0-9]+$/,
+        aliases: [
+            "controller_id",
+            "plant_id"
+        ]
+    },
+    sensor_pin: {
+        regex: /^[0-9]+$/,
+        aliases: [
+            "pump_pin"
+        ]
+    },
+    trigger_percentage: {
+        regex: /^[0-9]+$/,
+    },
+    sensor_type: {
+        regex: /analog|digital/
     },
     name: {
         regex: /[a-zA-z0-9 ]+/
-    }
+    },
+    expires_at: {
+        regex: /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/,
+        allow_null: true
+    },
 }
 
 //middle ware
@@ -135,7 +158,7 @@ function testData(data, test, key, res){
             })
         }
     }
-
+    
     //regex test
     if(!test.regex.test(data)){
         return res.status(400).json({
