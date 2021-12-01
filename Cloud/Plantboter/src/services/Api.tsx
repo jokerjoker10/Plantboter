@@ -49,7 +49,9 @@ axios.interceptors.response.use((response) => {
             })
     }
     var _error = error;
+    console.log(error.response.data)
     _error.config.headers["x-access-token"] = null
+    _error["response"] = error.response;
 
     if(window.location.pathname != "/error"){
         window.location.href = "/error?redirekt=" + encodeURIComponent(window.location.href.toString()) + "&error=" + encodeURIComponent(JSON.stringify(_error));
@@ -112,7 +114,7 @@ const api = {
             return axios.post(base_url + ROUTES.CONTROLLER.UPDATE_CONTROLLER + controller_id, body);
         }
     },
-    
+
     //plants
     plants: {
         getPlantsOfController: (controller_id: Number) => {
@@ -123,7 +125,20 @@ const api = {
         },
         getPlantInfo: (id: Number) => {
             return axios.get(base_url + ROUTES.PLANT.GET_PLANT_INFO + '/' + id);
-        }
+        },
+        updatePlant: (body: Object) => {
+            return axios.put(base_url + ROUTES.PLANT.UPDATE_PLANT, body);
+        },
+    },
+
+    // api keys
+    api_key: {
+        createApiKey: (body: Object) => {
+            return axios.post(base_url + ROUTES.API_KEY.CREATE_API_KEY, body);
+        },
+        getApiKey: (controller_id: Number) => {
+            return axios.get(base_url + ROUTES.API_KEY.GET_API_KEY + '/' + controller_id);
+        },
     },
 
     //healthchek

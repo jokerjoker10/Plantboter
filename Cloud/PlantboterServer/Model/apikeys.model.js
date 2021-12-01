@@ -13,10 +13,10 @@ const apikeys = db.define('apiKeys', {
         allowNull: false,
         unique: true
     },
-    active: {
-        type: Sequelize.BOOLEAN,
+    status: {
+        type: Sequelize.ENUM('active', 'inactive', 'expired'),
         allowNull: false,
-        defaultValue: true
+        defaultValue: 'active'
     },
     expire_at: {
         type: Sequelize.DATE,

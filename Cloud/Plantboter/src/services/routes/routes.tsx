@@ -28,6 +28,11 @@ const ROUTES = {
         GET_PLANTS_OF_CONTROLLER: "front/plant/plantsofcontroller",
         GET_PLANT_INFO: "front/plant",
         CREATE_PLANT: "front/plant",
+        UPDATE_PLANT: "front/plant",
+    },
+    API_KEY: {
+        CREATE_API_KEY: "front/api",
+        GET_API_KEY: "front/api"
     },
     HEALTHCHECK : "healthcheck"
 }
