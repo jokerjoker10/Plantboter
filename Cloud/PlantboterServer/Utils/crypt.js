@@ -26,7 +26,18 @@ const comparePassword = (plainpass, hashword) => {
 
 };
 
+function generateApiKey(){
+    var output = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    for(var i = 0; i < 255; i++){
+        output += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+
+    return output;
+}
+
 module.exports = {
     cryptPassword : cryptPassword,
-    comparePassword : comparePassword
+    comparePassword : comparePassword,
+    generateApiKey : generateApiKey,
 }
