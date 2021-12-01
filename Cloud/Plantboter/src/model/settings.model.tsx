@@ -19,13 +19,17 @@ interface Controller{
 }
 
 interface Plants{
+    default_name: String;
+    default_sensor_pin: Number;
+    default_pump_pin: Number;
+    default_sensor_type: String;
     trigger_percentage: DefaultValues;
     pump_time: DefaultValues;
 }
 
 interface DefaultValues {
-    default: number;
-    min: number;
-    max: number;
+    default: Number;
+    min: Number;
+    max: Number;
     allow_change: Boolean;
 }
