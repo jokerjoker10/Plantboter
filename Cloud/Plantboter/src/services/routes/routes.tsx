@@ -34,6 +34,9 @@ const ROUTES = {
         CREATE_API_KEY: "front/api",
         GET_API_KEY: "front/api"
     },
+    STATISTIC: {
+        GET_PLANT_DASHBOARD: "front/statistic/getPlantDashboard/"
+    },
     HEALTHCHECK : "healthcheck"
 }
 

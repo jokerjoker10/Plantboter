@@ -141,6 +141,13 @@ const api = {
         },
     },
 
+    // statistic
+    statistic: {
+        getPlantDashboard: () => {
+            return axios.get(base_url + ROUTES.STATISTIC.GET_PLANT_DASHBOARD);
+        }
+    },
+
     //healthchek
     healthCheck: () => {
         return axios.get(base_url + ROUTES.HEALTHCHECK);

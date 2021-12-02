@@ -8,6 +8,7 @@ const authRoute = require('./Front/auth.route');
 const controllerRoute = require('./Front/controller.route');
 const plantRoute = require('./Front/plant.route');
 const apiRoute = require('./Front/api.route');
+const statisticRoute = require('./Front/statistic.route');
 
 app.get('/', function(req, res) {
     res.send('Front Route: Please Read the documentation for information on usage.');
@@ -19,6 +20,7 @@ app.use('/mail', mailRoute);
 app.use('/settings', settingsRoute);
 app.use('/controller', auth, controllerRoute);
 app.use('/plant', auth, plantRoute);
-app.use('/api', auth, apiRoute)
+app.use('/api', auth, apiRoute);
+app.use('/statistic', auth, statisticRoute)
 
 module.exports = app;

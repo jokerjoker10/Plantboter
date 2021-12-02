@@ -1,5 +1,6 @@
 import { IonContent, IonFab, IonFabButton, IonFabList, IonIcon, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { ellipsisVerticalOutline, personOutline, logOutOutline, settingsOutline } from 'ionicons/icons';
+import { ellipsisVerticalOutline, personOutline, logOutOutline, settingsOutline, hardwareChipOutline } from 'ionicons/icons';
+import PlantList from '../components/home/plantlist';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -18,7 +19,7 @@ const Home: React.FC = () => {
               <IonIcon icon={personOutline}></IonIcon>
             </IonFabButton>
             <IonFabButton href="/settings">
-              <IonIcon icon={settingsOutline}></IonIcon>
+              <IonIcon icon={hardwareChipOutline}></IonIcon>
             </IonFabButton>
             <IonFabButton href="/logout" color="danger">
               <IonIcon icon={logOutOutline}></IonIcon>
@@ -27,8 +28,7 @@ const Home: React.FC = () => {
         </IonFab>
       </IonHeader>
       <IonContent fullscreen className="background">
-
-
+        <PlantList></PlantList>
       </IonContent>
     </IonPage>
   );
