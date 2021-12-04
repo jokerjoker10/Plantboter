@@ -23,7 +23,7 @@ const PlantList: React.FC = () => {
         </IonCardHeader>
         <div className="grid">
             {plant_list?.map((plant) => (
-                <IonCard button href={'/log/' + plant.id} color="medium">
+                <IonCard button href={'/log/' + plant.id} color="medium" key={plant.id}>
                     <IonCardHeader>
                         <IonCardTitle>{plant.name}</IonCardTitle>
                     </IonCardHeader>
