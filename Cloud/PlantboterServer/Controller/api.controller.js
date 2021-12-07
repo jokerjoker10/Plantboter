@@ -18,7 +18,6 @@ function createApiKey(req, res) {
         controller_id: req.body.controller_id
     }
     
-    console.log(data.expires_at)
     if (!data.controller_id) {
         res.status(400)
             .json({
@@ -69,7 +68,6 @@ function createApiKey(req, res) {
                             //deactivate every active api key
                             api_model.update({status: "inactive"},{where: {status: "active", controllerId: controller.dataValues.id}})
                             .then(() => {
-                                console.log(data.expires_at.getFullYear() + "-" + data.expires_at.getMonth() + "-" + data.expires_at.getDay())
                                 api_model.create({
                                     key: current_key,
                                     expires_at: data.expires_at.getUTCDate(),
