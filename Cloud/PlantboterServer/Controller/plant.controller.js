@@ -9,6 +9,7 @@ const plantController = {
     createPlant: createPlant,
     getPlantsFromController: getPlantsFromController,
     updatePlant: updatePlant,
+    apigetplants: apigetplants,
 }
 
 function getPlantInfo(req, res) {
@@ -298,6 +299,21 @@ function updatePlant(req, res){
                 error: error.toString()
             });
         return;
+    });
+}
+
+function apigetplants(req, res){
+    plant_model.findAll({where: {controllerId: req.controller_id}})
+    .then((plants) => {
+        res.status(200)
+        .json({
+            message: "plants found",
+            plants: plants
+        });
+        return;
+    })
+    .catch((error) => {
+
     });
 }
 
