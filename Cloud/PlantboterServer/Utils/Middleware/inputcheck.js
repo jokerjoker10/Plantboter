@@ -79,6 +79,12 @@ const TESTS = {
         regex: /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/,
         allow_null: true
     },
+    log_action: {
+        regex: /moisture_level|pump_action|system_boot|api_key_change|update|error/
+    },
+    int_data: {
+        regex: /^[0-9]+$/
+    }
 }
 
 //middle ware
@@ -101,7 +107,7 @@ var checkInput = (req, res, next) => {
         //define vars with test and the data to test
         var data = data_list[key];
         var test = test_list[key];
-        
+
         //test if data is array and loop over it if it is. Else it will just test the value.
         if(Object.prototype.toString.call(data) == '[object Array]'){
             for(var list_loop = 0; list_loop < data.length; list_loop++){
