@@ -11,6 +11,7 @@ import Settings from './pages/settings';
 import ControllerSettings from './pages/controllersettings';
 import ServerOffline from './pages/serveroffline';
 import ErrorPage from './pages/error';
+import Log from './pages/log';
 
 /* Modules */
 import api from './services/Api';
@@ -58,6 +59,7 @@ const App: React.FC = () => {
           <Route path="/settings" component={Settings}></Route>
           <Route path="/settings/:controller" component={ControllerSettings}></Route>
           <Route path="/error" component={ErrorPage} ></Route>
+          <Route path="/log/:id" component={Log}></Route>
         </IonRouterOutlet>
       </IonReactRouter>
       <Version></Version>
