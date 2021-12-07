@@ -111,9 +111,9 @@ async function sendTestMail(){
     var transporter = getTransporter();
     return transporter.sendMail({
         from: 'Plantboter 🌱 <' + config.email.auth.user + '>',
-        to: 'testmail@testmail.com',
-        subject: '',
-        text: ''
+        to: 'testmail@plantboter.com',
+        subject: 'Testmail',
+        text: 'Testmail'
     });
 }
 
