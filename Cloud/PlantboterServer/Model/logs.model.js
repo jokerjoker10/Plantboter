@@ -2,9 +2,9 @@ const Sequelize = require('sequelize');
 const db = require('../Database/database');
 
 const controllers = require('./controllers.model');
-const plants = require('./plants');
+const plants = require('./plants.model');
 const api_keys = require('./apikeys.model');
-const users = require('./users');
+const users = require('./users.model');
 
 const logs = db.define('logs', {
     id: {
@@ -32,11 +32,6 @@ const logs = db.define('logs', {
         allowNull: false,
         defaultValue: '{}'
     },
-    created_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-    }
 },
 {
     underscored: true
@@ -46,3 +41,5 @@ logs.belongsTo(controllers, {foreignKey: {allowNull: true}});
 logs.belongsTo(plants, {foreignKey: {allowNull: true}});
 logs.belongsTo(api_keys, {foreignKey: {allowNull: true}});
 logs.belongsTo(users, {foreignKey: {allowNull: true}});
+
+module.exports = logs
