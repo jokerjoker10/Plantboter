@@ -11,6 +11,7 @@ const db = require('../Database/database');
 // route modules
 const apiroute = require('./api.route');
 const frontroute = require('./front.route');
+const healthCheckController = require('../Controller/healthcheck.controller');
 
 // sync database
 db.sync()
@@ -35,12 +36,7 @@ app.use(cors("*"))
 app.use('/api/v1', inputCheck.checkInput, apiroute);
 
 // healthcheck route (always gives back 200)
-app.get('/healthcheck', (req, res) => {
-    res.status(200)
-        .json({
-            message: "System running"
-        });
-    return;
-});
+app.get('/healthcheck', healthCheckController.simpleHealthCheck);
+app.get('/healthcheck/extended', healthCheckController.extendedHealthCheck);
 
 module.exports = app;
